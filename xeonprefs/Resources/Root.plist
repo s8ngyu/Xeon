@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Themes stored in /Library/Zeppelin</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBTwitterCell</string>
+			<key>label</key>
+			<string>PeterDev</string>
+			<key>user</key>
+			<string>iospeterdev</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Enabled</string>
+			<key>key</key>
+			<string>kEnabled</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+
+		<!--Custom image-->
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Custom Image</string>
+			<key>footerText</key>
+			<string>Dynamic: Change image colors based on the status bar.&#10;Color: Use image color.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Enable Custom Image</string>
+			<key>key</key>
+			<string>kEnableCustomImage</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>default</key>
+			<string>None</string>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Themes</string>
+			<key>key</key>
+			<string>IconTheme</string>
+			<key>detail</key>
+			<string>XENIconThemesListController</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSegmentCell</string>
+			<key>default</key>
+			<integer>1</integer>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>key</key>
+			<string>kCustomImageColor</string>
+			<key>validValues</key>
+			<array>
+				<integer>0</integer>
+				<integer>1</integer>
+			</array>
+			<key>validTitles</key>
+			<array>
+				<string>Dynamic</string>
+				<string>Color</string>
+			</array>
+			<key>alignment</key>
+			<string>2</string>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Place in front of carrier text</string>
+			<key>key</key>
+			<string>kImageCarrierText</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Place in front of time</string>
+			<key>key</key>
+			<string>kImageTimeText</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+
+		<!--Custom Text-->
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Custom Text</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Enable Custom Text</string>
+			<key>key</key>
+			<string>kEnableCustomText</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>placeholder</key>
+			<string>Type emoji or text</string>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Custom text</string>
+			<key>key</key>
+			<string>kCustomText</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Place in front of carrier text</string>
+			<key>key</key>
+			<string>kTextCarrierText</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Place in front of time</string>
+			<key>key</key>
+			<string>kTextTimeText</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+
+		<!--Custom Carrier-->
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Custom Carrier</string>
+			<key>footerText</key>
+			<string>This requires respring to apply</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Enable Custom Carrier</string>
+			<key>key</key>
+			<string>kEnableCustomCarrier</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSEditTextCell</string>
+			<key>default</key>
+			<string></string>
+			<key>placeholder</key>
+			<string>Type cutsom carrier name</string>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Custom carrier</string>
+			<key>key</key>
+			<string>kCustomCarrier</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+
+		<!-- Credits -->
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>Xeon by PeterDev</string>
+			<key>isStaticText</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>action</key>
+			<string>respring:</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Respring</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSLinkCell</string>
+			<key>detail</key>
+			<string>XENCreditListController</string>
+			<key>isController</key>
+			<true/>
+			<key>label</key>
+			<string>Credits</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Github</string>
+			<key>subtitle</key>
+			<string>Source code</string>
+			<key>url</key>
+			<string>https://github.com/peterprd/Xeon</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>Xeon</string>
+</dict>
+</plist>
