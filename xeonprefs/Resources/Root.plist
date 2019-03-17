@@ -141,37 +141,33 @@
 			<real>1.0</real>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.peterdev.xeon</string>
-			<key>label</key>
-			<string>Place in front of carrier text</string>
-			<key>key</key>
-			<string>kImageCarrierText</string>
-			<key>alternateColors</key>
-			<true/>
-			<key>PostNotification</key>
-			<string>com.peterdev.xeon/settingschanged</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.peterdev.xeon</string>
-			<key>label</key>
-			<string>Place in front of time</string>
-			<key>key</key>
-			<string>kImageTimeText</string>
-			<key>alternateColors</key>
-			<true/>
-			<key>PostNotification</key>
-			<string>com.peterdev.xeon/settingschanged</string>
-		</dict>
+            <key>cell</key>
+            <string>PSLinkListCell</string>
+            <key>default</key>
+            <string>0</string>
+            <key>defaults</key>
+            <string>com.peterdev.xeon</string>
+            <key>key</key>
+            <string>kWhereToPutImage</string>
+            <key>label</key>
+            <string>Position</string>
+            <key>PostNotification</key>
+            <string>com.peterdev.xeon/settingschanged</string>
+            <key>detail</key>
+            <string>PSListItemsController</string>
+            <key>validValues</key>
+            <array>
+                <string>0</string>
+                <string>1</string>
+                <string>2</string>
+            </array>
+            <key>validTitles</key>
+            <array>
+                <string>In front of the carrier text</string>
+                <string>In front of the time text</string>
+                <string>Both</string>
+            </array>
+        </dict>
 
 		<!--Custom Text-->
 		<dict>
@@ -215,37 +211,33 @@
 			<string>com.peterdev.xeon/settingschanged</string>
 		</dict>
 		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.peterdev.xeon</string>
-			<key>label</key>
-			<string>Place in front of carrier text</string>
-			<key>key</key>
-			<string>kTextCarrierText</string>
-			<key>alternateColors</key>
-			<true/>
-			<key>PostNotification</key>
-			<string>com.peterdev.xeon/settingschanged</string>
-		</dict>
-		<dict>
-			<key>cell</key>
-			<string>PSSwitchCell</string>
-			<key>default</key>
-			<false/>
-			<key>defaults</key>
-			<string>com.peterdev.xeon</string>
-			<key>label</key>
-			<string>Place in front of time</string>
-			<key>key</key>
-			<string>kTextTimeText</string>
-			<key>alternateColors</key>
-			<true/>
-			<key>PostNotification</key>
-			<string>com.peterdev.xeon/settingschanged</string>
-		</dict>
+            <key>cell</key>
+            <string>PSLinkListCell</string>
+            <key>default</key>
+            <string>0</string>
+            <key>defaults</key>
+            <string>com.peterdev.xeon</string>
+            <key>key</key>
+            <string>kWhereToPutText</string>
+            <key>label</key>
+            <string>Position</string>
+            <key>PostNotification</key>
+            <string>com.peterdev.xeon/settingschanged</string>
+            <key>detail</key>
+            <string>PSListItemsController</string>
+            <key>validValues</key>
+            <array>
+                <string>0</string>
+                <string>1</string>
+                <string>2</string>
+            </array>
+            <key>validTitles</key>
+            <array>
+                <string>In front of the carrier text</string>
+                <string>In front of the time text</string>
+                <string>Both</string>
+            </array>
+        </dict>
 
 		<!--Custom Carrier-->
 		<dict>

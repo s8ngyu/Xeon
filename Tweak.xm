@@ -13,12 +13,14 @@ static bool isEnabled = true;
 static bool isCustomImageEnabled = true;
 static bool imageInFrontOfCarrierText = true;
 static bool imageInFrontOfTimeText = true;
+static int whereToPutImage = 0;
 static int imageColor = 1;
-static int themesOrImage = 1;
+static int themesOrImage = 0;
 //Custom Text
 static bool isCustomTextEnabled = false;
 static bool textInFrontOfCarrierText = false;
 static bool textInFrontOfTimeText = false;
+static int whereToPutText = 0;
 static NSString *customText = @"";
 //Custom Carrier
 static bool isCustomCarrierEnabled = false;
@@ -64,6 +66,18 @@ static XENTheme *currentTheme;
 %property (nonatomic, assign) BOOL isTime;
 -(void)setText:(id)arg1 {
 	%orig;
+
+	if (whereToPutImage == 0) {
+		imageInFrontOfCarrierText = true;
+		imageInFrontOfTimeText = false;
+	} else if (whereToPutImage == 1) {
+		imageInFrontOfCarrierText = false;
+		imageInFrontOfTimeText = true;
+	} else if (whereToPutImage == 2) {
+		imageInFrontOfCarrierText = true;
+		imageInFrontOfTimeText = true;
+	}
+
 	if (self.isServiceView) {
 		if (imageInFrontOfCarrierText) {
 			NSString *space = @" ";
@@ -202,6 +216,18 @@ static XENTheme *currentTheme;
 %property (nonatomic, assign) BOOL isTime;
 -(void)setText:(id)arg1 {
 	%orig;
+
+	if (whereToPutText == 0) {
+		textInFrontOfCarrierText = true;
+		textInFrontOfTimeText = false;
+	} else if (whereToPutText == 1) {
+		textInFrontOfCarrierText = false;
+		textInFrontOfTimeText = true;
+	} else if (whereToPutText == 2) {
+		textInFrontOfCarrierText = true;
+		textInFrontOfTimeText = true;
+	}
+
 	if (self.isServiceView) {
 		if (textInFrontOfCarrierText) {
 			NSString *carrierString = arg1;
@@ -239,14 +265,12 @@ void loadPrefs() {
     isEnabled = [([file objectForKey:@"kEnabled"] ?: @(YES)) boolValue];
 	//Custom Image
 	isCustomImageEnabled = [([file objectForKey:@"kEnableCustomImage"] ?: @(YES)) boolValue];
-	imageInFrontOfCarrierText = [([file objectForKey:@"kImageCarrierText"] ?: @(YES)) boolValue];
-	imageInFrontOfTimeText = [([file objectForKey:@"kImageTimeText"] ?: @(YES)) boolValue];
+	whereToPutImage = [([file objectForKey:@"kWhereToPutImage"] ?: @(0)) intValue];
 	imageColor = [([file objectForKey:@"kCustomImageColor"] ?: @(1)) intValue];
 	themesOrImage = [([file objectForKey:@"kThemesOrImages"] ?: @(0)) intValue];
 	//Custim Text
 	isCustomTextEnabled = [([file objectForKey:@"kEnableCustomText"] ?: @(NO)) boolValue];
-	textInFrontOfCarrierText = [([file objectForKey:@"kTextCarrierText"] ?: @(NO)) boolValue];
-	textInFrontOfTimeText = [([file objectForKey:@"kTextTimeText"] ?: @(NO)) boolValue];
+	whereToPutText = [([file objectForKey:@"kWhereToPutText"] ?: @(0)) intValue];
 	customText = [file objectForKey:@"kCustomText"];
 	if (!customText) customText = @"";
 	//Custom Carrier
