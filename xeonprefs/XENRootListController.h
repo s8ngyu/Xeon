@@ -7,6 +7,8 @@
 #import "XENCommon.h"
 #import "IconThemes.h"
 #import "XENCreditListController.h"
+#import <libimagepicker.h>
+#import <LIPImageChooseCell.h>
 
 @interface XENRootListController : HBRootListController
 - (void)respring:(id)sender;

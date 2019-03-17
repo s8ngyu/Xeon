@@ -4,6 +4,8 @@
 #import <UIKit/UIControl.h>
 #import <Cephei/HBPreferences.h>
 #import "./xeonprefs/XENCommon.h"
+#import <libimagepicker.h>
+#import <LIPImageChooseCell.h>
 
 //Tweak Enabled
 static bool isEnabled = true;
@@ -12,6 +14,7 @@ static bool isCustomImageEnabled = true;
 static bool imageInFrontOfCarrierText = true;
 static bool imageInFrontOfTimeText = true;
 static int imageColor = 1;
+static int themesOrImage = 1;
 //Custom Text
 static bool isCustomTextEnabled = false;
 static bool textInFrontOfCarrierText = false;
@@ -65,6 +68,11 @@ static XENTheme *currentTheme;
 		if (imageInFrontOfCarrierText) {
 			NSString *space = @" ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
+
+			NSString *const imagesDomain = @"com.peterdev.xeon";
+			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
+			UIImage *userCustomImage = [UIImage imageWithData:data];
+
 			UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
 			if (!img) {
 				img = [currentTheme getIcon:@"logo@2x.png"];
@@ -87,7 +95,14 @@ static XENTheme *currentTheme;
 			if (!img) {
 				img = [currentTheme getIcon:@"light@2x.png"];
 			}
-			UIImage *newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+
+			UIImage *newImage = nil;
+
+			if (themesOrImage == 0) {
+				newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+			} else {
+				newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+			}
 
 			if (imageColor == 0) {
 				newImage = [newImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -117,6 +132,11 @@ static XENTheme *currentTheme;
 		if ([arg1 containsString:@":"]) {
 			NSString *space = @" ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
+
+			NSString *const imagesDomain = @"com.peterdev.xeon";
+			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
+			UIImage *userCustomImage = [UIImage imageWithData:data];
+
 			UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
 			if (!img) {
 				img = [currentTheme getIcon:@"logo@2x.png"];
@@ -139,7 +159,14 @@ static XENTheme *currentTheme;
 			if (!img) {
 				img = [currentTheme getIcon:@"light@2x.png"];
 			}
-			UIImage *newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+
+			UIImage *newImage = nil;
+
+			if (themesOrImage == 0) {
+				newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+			} else {
+				newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+			}
 
 			if (imageColor == 0) {
 				newImage = [newImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -215,6 +242,7 @@ void loadPrefs() {
 	imageInFrontOfCarrierText = [([file objectForKey:@"kImageCarrierText"] ?: @(YES)) boolValue];
 	imageInFrontOfTimeText = [([file objectForKey:@"kImageTimeText"] ?: @(YES)) boolValue];
 	imageColor = [([file objectForKey:@"kCustomImageColor"] ?: @(1)) intValue];
+	themesOrImage = [([file objectForKey:@"kThemesOrImages"] ?: @(0)) intValue];
 	//Custim Text
 	isCustomTextEnabled = [([file objectForKey:@"kEnableCustomText"] ?: @(NO)) boolValue];
 	textInFrontOfCarrierText = [([file objectForKey:@"kTextCarrierText"] ?: @(NO)) boolValue];
