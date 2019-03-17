@@ -168,6 +168,38 @@
                 <string>Both</string>
             </array>
         </dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Hide carrier text</string>
+			<key>key</key>
+			<string>kHideCarrierText</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Hide time text</string>
+			<key>key</key>
+			<string>kHideTimeText</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
 
 		<!--Custom Text-->
 		<dict>

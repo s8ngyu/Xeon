@@ -16,6 +16,8 @@ static bool imageInFrontOfTimeText = true;
 static int whereToPutImage = 0;
 static int imageColor = 1;
 static int themesOrImage = 0;
+static bool hideCarrierText = false;
+static bool hideTimeText = false;
 //Custom Text
 static bool isCustomTextEnabled = false;
 static bool textInFrontOfCarrierText = false;
@@ -82,6 +84,9 @@ static XENTheme *currentTheme;
 		if (imageInFrontOfCarrierText) {
 			NSString *space = @" ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
+			if (hideCarrierText) {
+				carrierText = @"";
+			}
 
 			NSString *const imagesDomain = @"com.peterdev.xeon";
 			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
@@ -113,9 +118,17 @@ static XENTheme *currentTheme;
 			UIImage *newImage = nil;
 
 			if (themesOrImage == 0) {
-				newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+				if (hideCarrierText) {
+					newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
+				} else {
+					newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+				}
 			} else {
-				newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+				if (hideCarrierText) {
+					newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
+				} else {
+					newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+				}
 			}
 
 			if (imageColor == 0) {
@@ -146,6 +159,9 @@ static XENTheme *currentTheme;
 		if ([arg1 containsString:@":"]) {
 			NSString *space = @" ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
+			if (hideTimeText) {
+				carrierText = @"";
+			}
 
 			NSString *const imagesDomain = @"com.peterdev.xeon";
 			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
@@ -177,9 +193,17 @@ static XENTheme *currentTheme;
 			UIImage *newImage = nil;
 
 			if (themesOrImage == 0) {
-				newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+				if (hideTimeText) {
+					newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
+				} else {
+					newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+				}
 			} else {
-				newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+				if (hideTimeText) {
+					newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
+				} else {
+					newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+				}
 			}
 
 			if (imageColor == 0) {
@@ -268,6 +292,8 @@ void loadPrefs() {
 	whereToPutImage = [([file objectForKey:@"kWhereToPutImage"] ?: @(0)) intValue];
 	imageColor = [([file objectForKey:@"kCustomImageColor"] ?: @(1)) intValue];
 	themesOrImage = [([file objectForKey:@"kThemesOrImages"] ?: @(0)) intValue];
+	hideCarrierText = [([file objectForKey:@"kHideCarrierText"] ?: @(NO)) boolValue];
+	hideTimeText = [([file objectForKey:@"kHideTimeText"] ?: @(NO)) boolValue];
 	//Custim Text
 	isCustomTextEnabled = [([file objectForKey:@"kEnableCustomText"] ?: @(NO)) boolValue];
 	whereToPutText = [([file objectForKey:@"kWhereToPutText"] ?: @(0)) intValue];
