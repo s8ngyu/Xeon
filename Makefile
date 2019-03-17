@@ -4,6 +4,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Xeon
 Xeon_FILES = Tweak.xm ./headers/UIImage+ScaledImage.m ./xeonprefs/XENCommon.m
+Xeon_LIBRARIES = imagepicker
 Xeon_EXTRA_FRAMEWORKS += Cephei
 
 ADDITIONAL_OBJCFLAGS = -fobjc-arc

@@ -7,6 +7,7 @@ XeonPrefs_FILES = XENRootListController.m XENCreditListController.m IconThemes.m
 XeonPrefs_INSTALL_PATH = /Library/PreferenceBundles
 XeonPrefs_FRAMEWORKS = UIKit
 XeonPrefs_PRIVATE_FRAMEWORKS = Preferences
+XeonPrefs_LIBRARIES = imagepicker
 XeonPrefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
 
 include $(THEOS_MAKE_PATH)/bundle.mk
