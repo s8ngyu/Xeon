@@ -4,9 +4,7 @@ Depends: mobilesubstrate, ws.hbang.common (>= 1.11), firmware (>= 11.0), cy+cpu.
 Version: 1.0
 Architecture: iphoneos-arm
 Description: Supercharge status bar!
-Replaces: com.alexzielenski.zeppelin, zeppelin
-Provides: com.alexzielenski.zeppelin, zeppelin
-Conflicts: com.alexzielenski.zeppelin, zeppelin
+Provides: com.alexzielenski.zeppelin
 Maintainer: PeterDev <djperter@icloud.com>
 Author: PeterDev <djperter@icloud.com>
 Icon: https://nexusrepo.kro.kr/depictions/com.peterdev.xeon/screenshots/Icon.png
