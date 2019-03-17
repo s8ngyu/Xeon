@@ -236,7 +236,7 @@
 			<key>default</key>
 			<string></string>
 			<key>placeholder</key>
-			<string>Type cutsom carrier name</string>
+			<string>Type custom carrier name</string>
 			<key>defaults</key>
 			<string>com.peterdev.xeon</string>
 			<key>label</key>
