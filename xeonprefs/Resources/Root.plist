@@ -135,10 +135,8 @@
 			<string>com.peterdev.xeon</string>
 			<key>key</key>
 			<string>kUserCustomImage</string>
-			<key>usesJPEG</key>
-			<false/>
-			<key>compressionQuality</key>
-			<real>1.0</real>
+			<key>usesGIF</key>
+			<true/>
 		</dict>
 		<dict>
             <key>cell</key>
