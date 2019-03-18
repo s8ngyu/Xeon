@@ -10,7 +10,7 @@
 
 //Tweak Enabled
 static bool isEnabled = true;
-static bool debug = false;
+static bool debug = false; //Don't enable this.
 //Custom Image
 static bool isCustomImageEnabled = true;
 static bool imageInFrontOfCarrierText = true;
