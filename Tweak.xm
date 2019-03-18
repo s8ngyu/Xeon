@@ -10,6 +10,7 @@
 
 //Tweak Enabled
 static bool isEnabled = true;
+static bool debug = false;
 //Custom Image
 static bool isCustomImageEnabled = true;
 static bool imageInFrontOfCarrierText = true;
@@ -51,6 +52,10 @@ static XENTheme *currentTheme;
 
 @interface SBTelephonySubscriptionInfo : NSObject
 -(NSString *)operatorName;
+@end
+
+@interface SBFLockScreenDateView : UIView
+-(void)layoutSubviews;
 @end
 
 %group Xeon
@@ -286,6 +291,25 @@ static XENTheme *currentTheme;
 %end
 %end
 
+%group debug
+%hook SBFLockScreenDateView
+-(void)layoutSubviews {
+	NSString *const imagesDomain = @"com.peterdev.xeon";
+	NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
+	//UIImage *userCustomImage = [UIImage imageWithData:data];
+	UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+
+	UIImageView *pacman = nil;
+	if (!pacman) {
+		pacman = [[UIImageView alloc] initWithFrame:CGRectMake(50,50,20,20)];
+  		pacman.image = userCustomImage;
+  		[self addSubview:pacman];
+	}
+	%orig;
+}
+%end
+%end
+
 void loadPrefs() {
 	HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"com.peterdev.xeon"];
 	//Tweak Enabled
@@ -320,6 +344,7 @@ void loadPrefs() {
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, (CFStringRef)XENNotification, NULL, kNilOptions);
 
 	if (isEnabled) {
+		if (debug) %init(debug);
 		if (isCustomImageEnabled || isCustomTextEnabled) %init(Xeon);
 		if (isCustomImageEnabled) %init(XENCustomImage);
 		if (isCustomTextEnabled) %init(XENCustomText);
