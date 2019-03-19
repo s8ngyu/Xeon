@@ -112,7 +112,7 @@
 			<key>cell</key>
 			<string>PSLinkListCell</string>
 			<key>default</key>
-			<string>None</string>
+			<string>Classic Apple</string>
 			<key>defaults</key>
 			<string>com.peterdev.xeon</string>
 			<key>label</key>
@@ -307,6 +307,29 @@
 			<string>Custom carrier</string>
 			<key>key</key>
 			<string>kCustomCarrier</string>
+			<key>alternateColors</key>
+			<true/>
+			<key>PostNotification</key>
+			<string>com.peterdev.xeon/settingschanged</string>
+		</dict>
+		<!-- Other Settings -->
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Other Settings</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>label</key>
+			<string>Automatically adjust font size</string>
+			<key>key</key>
+			<string>kAdjustFontSize</string>
 			<key>alternateColors</key>
 			<true/>
 			<key>PostNotification</key>

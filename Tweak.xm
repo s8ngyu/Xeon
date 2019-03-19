@@ -29,6 +29,8 @@ static NSString *customText = @"";
 //Custom Carrier
 static bool isCustomCarrierEnabled = false;
 static NSString *customCarrier = @"";
+//Other Settings
+static bool adjustFontSize = true;
 //Custom Theme
 static XENTheme *currentTheme;
 
@@ -235,7 +237,9 @@ static XENTheme *currentTheme;
 			[completeText appendAttributedString:textAfterIcon];
 			self.textAlignment = NSTextAlignmentRight;
 			self.attributedText = completeText;
-			[self setAdjustsFontSizeToFitWidth:YES];
+			if (adjustFontSize) {
+				[self setAdjustsFontSizeToFitWidth:YES];
+			}
 		}
 	}
 }
@@ -330,10 +334,13 @@ void loadPrefs() {
 	isCustomCarrierEnabled = [([file objectForKey:@"kEnableCustomCarrier"] ?: @(NO)) boolValue];
 	customCarrier = [file objectForKey:@"kCustomCarrier"];
 	if (!customCarrier) customCarrier = @"";
+	//Other Settings
+	adjustFontSize = [([file objectForKey:@"kAdjustFontSize"] ?: @(YES)) boolValue];
+
 	//Custom Theme
 	NSString *iconTheme = [file objectForKey:@"IconTheme"];
     if(!iconTheme){
-        iconTheme = @"Default";
+        iconTheme = @"Classic Apple";
     }
 
 	currentTheme = [XENTheme themeWithPath:[XENThemesDirectory stringByAppendingPathComponent:iconTheme]];
