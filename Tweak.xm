@@ -96,8 +96,8 @@ static XENTheme *currentTheme;
 
 			NSString *const imagesDomain = @"com.peterdev.xeon";
 			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-			//UIImage *userCustomImage = [UIImage imageWithData:data];
-			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+			UIImage *userCustomImage = [UIImage imageWithData:data];
+			//UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 
 			UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
 			if (!img) {
@@ -172,8 +172,8 @@ static XENTheme *currentTheme;
 
 			NSString *const imagesDomain = @"com.peterdev.xeon";
 			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-			//UIImage *userCustomImage = [UIImage imageWithData:data];
-			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+			UIImage *userCustomImage = [UIImage imageWithData:data];
+			//UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 
 			UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
 			if (!img) {
