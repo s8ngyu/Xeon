@@ -10,7 +10,7 @@
 
 //Tweak Enabled
 static bool isEnabled = true;
-static bool debug = false; //Don't enable this.
+static bool debug = true; //Don't enable this.
 //Custom Image
 static bool isCustomImageEnabled = true;
 static bool imageInFrontOfCarrierText = true;
@@ -33,6 +33,8 @@ static NSString *customCarrier = @"";
 static bool adjustFontSize = true;
 //Custom Theme
 static XENTheme *currentTheme;
+
+UIImageView *gifImage;
 
 @interface _UIStatusBarItem : NSObject
 @end
@@ -296,20 +298,32 @@ static XENTheme *currentTheme;
 %end
 
 %group debug
-%hook SBFLockScreenDateView
--(void)layoutSubviews {
-	NSString *const imagesDomain = @"com.peterdev.xeon";
-	NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-	//UIImage *userCustomImage = [UIImage imageWithData:data];
-	UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
-
-	UIImageView *pacman = nil;
-	if (!pacman) {
-		pacman = [[UIImageView alloc] initWithFrame:CGRectMake(50,50,20,20)];
-  		pacman.image = userCustomImage;
-  		[self addSubview:pacman];
-	}
+%hook _UIStatusBarStringView
+%property (nonatomic, assign) BOOL isServiceView;
+%property (nonatomic, assign) BOOL isTime;
+-(void)setText:(id)arg1 {
+	NSString *text = @"SKT";
 	%orig;
+	if (self.isServiceView) {
+		%orig(text);
+		NSString *const imagesDomain = @"com.peterdev.xeon";
+		NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
+		UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+
+		if (!gifImage) {
+			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(-25,-5,25,25)];
+  			gifImage.image = userCustomImage;
+  			[self addSubview:gifImage];
+		}
+	}
+}
+%end
+
+%hook _UIStatusBarCellularItem 
+-(_UIStatusBarStringView *)serviceNameView {
+	_UIStatusBarStringView *orig = %orig;
+	orig.isServiceView = TRUE;
+	return orig;
 }
 %end
 %end
@@ -352,9 +366,9 @@ void loadPrefs() {
 
 	if (isEnabled) {
 		if (debug) %init(debug);
-		if (isCustomImageEnabled || isCustomTextEnabled) %init(Xeon);
-		if (isCustomImageEnabled) %init(XENCustomImage);
-		if (isCustomTextEnabled) %init(XENCustomText);
-		if (isCustomCarrierEnabled) %init(XENCustomCarrier);
+		if (!debug & isCustomImageEnabled || isCustomTextEnabled) %init(Xeon);
+		if (!debug & isCustomImageEnabled) %init(XENCustomImage);
+		if (!debug & isCustomTextEnabled) %init(XENCustomText);
+		if (!debug & isCustomCarrierEnabled) %init(XENCustomCarrier);
 	}
 }
