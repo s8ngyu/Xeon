@@ -315,16 +315,17 @@ UIImageView *gifImage;
 %property (nonatomic, assign) BOOL isServiceView;
 %property (nonatomic, assign) BOOL isTime;
 -(void)setText:(id)arg1 {
-	NSString *text = @"SKT";
 	%orig;
 	if (self.isServiceView) {
-		%orig(text);
+		NSString *space = @"        ";
+		NSString *carrierText = [space stringByAppendingString:arg1];
+		%orig(carrierText);
 		NSString *const imagesDomain = @"com.peterdev.xeon";
 		NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
 		UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 
 		if (!gifImage) {
-			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(-25,-5,25,25)];
+			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
   			gifImage.image = userCustomImage;
   			[self addSubview:gifImage];
 		}
