@@ -324,6 +324,8 @@ UIImageView *gifImage;
 		NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
 		UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 
+		[gifImage removeFromSuperview];
+		gifImage.image = nil;
 		gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
   		gifImage.image = userCustomImage;
   		[self addSubview:gifImage];
@@ -337,6 +339,8 @@ UIImageView *gifImage;
 		NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
 		UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 		
+		[gifImage removeFromSuperview];
+		gifImage.image = nil;
 		gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
   		gifImage.image = userCustomImage;
   		[self addSubview:gifImage];
