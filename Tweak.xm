@@ -42,6 +42,10 @@ UIImageView *gifImage;
 @interface _UIStatusBarCellularItem : _UIStatusBarItem
 @end
 
+@interface _UIStatusBarTimeItem
+@property (copy) _UIStatusBarStringView *shortTimeView;
+@end
+
 @interface _UIStatusBarStringView : UILabel
 @property (nonatomic,copy) NSString * originalText; 
 @property (nonatomic, assign) BOOL isServiceView;
@@ -67,6 +71,15 @@ UIImageView *gifImage;
 -(_UIStatusBarStringView *)serviceNameView {
 	_UIStatusBarStringView *orig = %orig;
 	orig.isServiceView = TRUE;
+	return orig;
+}
+%end
+
+%hook _UIStatusBarTimeItem
+-(_UIStatusBarStringView *)shortTimeView{
+	_UIStatusBarStringView *orig = %orig;
+	orig.isTime = TRUE;
+	orig.timeFrame = orig.frame;
 	return orig;
 }
 %end
@@ -323,6 +336,15 @@ UIImageView *gifImage;
 -(_UIStatusBarStringView *)serviceNameView {
 	_UIStatusBarStringView *orig = %orig;
 	orig.isServiceView = TRUE;
+	return orig;
+}
+%end
+
+%hook _UIStatusBarTimeItem
+-(_UIStatusBarStringView *)shortTimeView{
+	_UIStatusBarStringView *orig = %orig;
+	orig.isTime = TRUE;
+	orig.timeFrame = orig.frame;
 	return orig;
 }
 %end
