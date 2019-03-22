@@ -324,11 +324,22 @@ UIImageView *gifImage;
 		NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
 		UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 
-		if (!gifImage) {
-			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
-  			gifImage.image = userCustomImage;
-  			[self addSubview:gifImage];
-		}
+		gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
+  		gifImage.image = userCustomImage;
+  		[self addSubview:gifImage];
+	}
+
+	if (self.isTime) {
+		NSString *space = @"        ";
+		NSString *carrierText = [space stringByAppendingString:arg1];
+		%orig(carrierText);
+		NSString *const imagesDomain = @"com.peterdev.xeon";
+		NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
+		UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+		
+		gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
+  		gifImage.image = userCustomImage;
+  		[self addSubview:gifImage];
 	}
 }
 %end
