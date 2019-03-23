@@ -1,8 +1,6 @@
 #import "IconThemes.h"
 #import "XENRootListController.h"
 
-#define kSettingsIconPath	@"/Library/PreferenceBundles/KakaoTalkToolsPrefs.bundle/icon.png"
-
 @interface XENAlignedTableViewCell : UITableViewCell {
 }
 @end
