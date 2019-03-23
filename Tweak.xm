@@ -20,6 +20,8 @@ static int imageColor = 1;
 static int themesOrImage = 0;
 static bool hideCarrierText = false;
 static bool hideTimeText = false;
+static NSData *userCustomImageData = nil;
+static UIImageView *gifImage;
 //Custom Text
 static bool isCustomTextEnabled = false;
 static bool textInFrontOfCarrierText = false;
@@ -48,8 +50,8 @@ static XENTheme *currentTheme;
 @end
 
 @interface _UIStatusBarTimeItem : _UIStatusBarItem
-@property (nonatomic,retain) _UIStatusBarStringView * shortTimeView;
-@property (nonatomic,retain) _UIStatusBarStringView * pillTimeView;
+@property (nonatomic, retain) _UIStatusBarStringView * shortTimeView;
+@property (nonatomic, retain) _UIStatusBarStringView * pillTimeView;
 @end
 
 @interface SBStatusBarStateAggregator : NSObject
@@ -109,10 +111,7 @@ static XENTheme *currentTheme;
 					carrierText = @"";
 				}
 
-				NSString *const imagesDomain = @"com.peterdev.xeon";
-				NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-				UIImage *userCustomImage = [UIImage imageWithData:data];
-				//UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+				UIImage *userCustomImage = [UIImage imageWithData:userCustomImageData];
 
 				UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
 				if (!img) {
@@ -185,10 +184,7 @@ static XENTheme *currentTheme;
 					carrierText = @"";
 				}
 
-				NSString *const imagesDomain = @"com.peterdev.xeon";
-				NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-				UIImage *userCustomImage = [UIImage imageWithData:data];
-				//UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+				UIImage *userCustomImage = [UIImage imageWithData:userCustomImageData];
 
 				UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
 				if (!img) {
@@ -314,17 +310,17 @@ static XENTheme *currentTheme;
 	%property (nonatomic, assign) BOOL isTime;
 	-(void)setText:(id)arg1 {
 		%orig;
-		UIImageView *gifImage = (UIImageView *)[self viewWithTag:111];
+
+		for(UIView *subview in [self subviews]) {
+			[subview removeFromSuperview];
+		}
+
 		if (self.isServiceView) {
 			NSString *space = @"        ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
 			%orig(carrierText);
-			NSString *const imagesDomain = @"com.peterdev.xeon";
-			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 
-			[[self viewWithTag:111] removeFromSuperview];
-			gifImage.image = nil;
 			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
 			gifImage.image = userCustomImage;
 			[self addSubview:gifImage];
@@ -334,12 +330,8 @@ static XENTheme *currentTheme;
 			NSString *space = @"        ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
 			%orig(carrierText);
-			NSString *const imagesDomain = @"com.peterdev.xeon";
-			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 			
-			[[self viewWithTag:111] removeFromSuperview];
-			gifImage.image = nil;
 			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
 			gifImage.image = userCustomImage;
 			[self addSubview:gifImage];
@@ -349,13 +341,9 @@ static XENTheme *currentTheme;
 			NSString *space = @"        ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
 			%orig(carrierText);
-			NSString *const imagesDomain = @"com.peterdev.xeon";
-			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 			
-			[[self viewWithTag:111] removeFromSuperview];
-			gifImage.image = nil;
-			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,20,20)];
+			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
 			gifImage.image = userCustomImage;
 			[self addSubview:gifImage];
 		}
@@ -390,6 +378,7 @@ void loadPrefs() {
 	themesOrImage = [([file objectForKey:@"kThemesOrImages"] ?: @(0)) intValue];
 	hideCarrierText = [([file objectForKey:@"kHideCarrierText"] ?: @(NO)) boolValue];
 	hideTimeText = [([file objectForKey:@"kHideTimeText"] ?: @(NO)) boolValue];
+	userCustomImageData = [file objectForKey:@"kUserCustomImage"];
 	//Custim Text
 	isCustomTextEnabled = [([file objectForKey:@"kEnableCustomText"] ?: @(NO)) boolValue];
 	whereToPutText = [([file objectForKey:@"kWhereToPutText"] ?: @(0)) intValue];
