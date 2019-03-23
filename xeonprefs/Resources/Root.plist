@@ -223,6 +223,8 @@
 			<string>PSGroupCell</string>
 			<key>label</key>
 			<string>Custom Text</string>
+			<key>footerText</key>
+			<string>Custom text will not work if GIF is selected</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -330,6 +332,7 @@
 			<key>PostNotification</key>
 			<string>com.peterdev.xeon/settingschanged</string>
 		</dict>
+
 		<!-- Other Settings -->
 		<dict>
 			<key>cell</key>
@@ -375,7 +378,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Most of default logos are from Zeppelin&#10;Xeon by PeterDev</string>
+			<string>Most of default theme logos are from Zeppelin&#10;Xeon by PeterDev</string>
 			<key>isStaticText</key>
 			<true/>
 		</dict>
