@@ -366,6 +366,9 @@ static XENGIFTheme *currentGIFTheme;
 
 			if (self.isTime && imageInFrontOfTimeText) {
 				%orig(carrierText);
+				if (adjustFontSize) {
+					[self setAdjustsFontSizeToFitWidth:YES];
+				}
 				NSData *gifImageData = [currentGIFTheme getGIFData:@"animated.gif"];
 
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
@@ -383,7 +386,6 @@ static XENGIFTheme *currentGIFTheme;
 
 			if (usingiPadStyle && [arg1 containsString:@":"]) {
 				%orig(carrierText);
-				UIImage *img = [currentGIFTheme getGIFIcon:@"animated.gif"];
 				NSData *gifImageData = [currentGIFTheme getGIFData:@"animated.gif"];
 
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
@@ -431,8 +433,8 @@ static XENGIFTheme *currentGIFTheme;
 			}
 		}
 		
-		if (textInFrontOfTimeText) {
-			if ([arg1 containsString:@":"]) {
+		if (self.isTime) {
+			if (textInFrontOfTimeText) {
 				NSString *timeString = arg1;
 				NSString *spyString = customText;
 				NSString *statusString = [spyString stringByAppendingString:timeString];
@@ -562,7 +564,9 @@ void loadPrefs() {
 		if (debug) %init(debug);
 		if (!debug && (isCustomImageEnabled || isCustomTextEnabled)) %init(Xeon);
 		if (!debug && isCustomImageEnabled) %init(XENCustomImage);
-		if (!debug && isCustomTextEnabled) %init(XENCustomText);
+		if (!(themesOrImage == 2) && !(themesOrImage == 3)) {
+			if (!debug && isCustomTextEnabled) %init(XENCustomText);
+		}
 		if (!debug && isCustomCarrierEnabled) %init(XENCustomCarrier);
 	}
 }
