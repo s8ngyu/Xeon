@@ -345,6 +345,21 @@ UIImageView *gifImage;
 			gifImage.image = userCustomImage;
 			[self addSubview:gifImage];
 		}
+
+		if (!self.isTime && [arg1 containsString:@":"]) {
+			NSString *space = @"        ";
+			NSString *carrierText = [space stringByAppendingString:arg1];
+			%orig(carrierText);
+			NSString *const imagesDomain = @"com.peterdev.xeon";
+			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
+			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+			
+			[gifImage removeFromSuperview];
+			gifImage.image = nil;
+			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,20,20)];
+			gifImage.image = userCustomImage;
+			[self addSubview:gifImage];
+		}
 	}
 	%end
 
