@@ -34,8 +34,6 @@ static bool adjustFontSize = true;
 //Custom Theme
 static XENTheme *currentTheme;
 
-UIImageView *gifImage;
-
 @interface _UIStatusBarItem : NSObject
 @end
 
@@ -316,6 +314,7 @@ UIImageView *gifImage;
 	%property (nonatomic, assign) BOOL isTime;
 	-(void)setText:(id)arg1 {
 		%orig;
+		UIImageView *gifImage = (UIImageView *)[self viewWithTag:111];
 		if (self.isServiceView) {
 			NSString *space = @"        ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
@@ -324,7 +323,7 @@ UIImageView *gifImage;
 			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
 			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 
-			[gifImage removeFromSuperview];
+			[[self viewWithTag:111] removeFromSuperview];
 			gifImage.image = nil;
 			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
 			gifImage.image = userCustomImage;
@@ -339,7 +338,7 @@ UIImageView *gifImage;
 			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
 			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 			
-			[gifImage removeFromSuperview];
+			[[self viewWithTag:111] removeFromSuperview];
 			gifImage.image = nil;
 			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
 			gifImage.image = userCustomImage;
@@ -354,7 +353,7 @@ UIImageView *gifImage;
 			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
 			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
 			
-			[gifImage removeFromSuperview];
+			[[self viewWithTag:111] removeFromSuperview];
 			gifImage.image = nil;
 			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,20,20)];
 			gifImage.image = userCustomImage;
