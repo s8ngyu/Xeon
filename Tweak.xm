@@ -419,8 +419,8 @@ void loadPrefs() {
 	if (isEnabled) {
 		if (debug) %init(debug);
 		if (!debug && (isCustomImageEnabled || isCustomTextEnabled)) %init(Xeon);
-		if (!debug & isCustomImageEnabled) %init(XENCustomImage);
-		if (!debug & isCustomTextEnabled) %init(XENCustomText);
-		if (!debug & isCustomCarrierEnabled) %init(XENCustomCarrier);
+		if (!debug && isCustomImageEnabled) %init(XENCustomImage);
+		if (!debug && isCustomTextEnabled) %init(XENCustomText);
+		if (!debug && isCustomCarrierEnabled) %init(XENCustomCarrier);
 	}
 }
