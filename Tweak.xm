@@ -1,12 +1,13 @@
-#import "./headers/UIImage+ScaledImage.h"
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <UIKit/UIControl.h>
 #import <Cephei/HBPreferences.h>
-#import "./xeonprefs/XENCommon.h"
 #import <libimagepicker.h>
 #import <LIPImageChooseCell.h>
+#import "./headers/UIImage+ScaledImage.h"
 #import "./headers/UIImage+animatedGIF.h"
+#import "./xeonprefs/XENCommon.h"
+#import "./xeonprefs/XENGIFCommon.h"
 
 //Tweak Enabled
 static bool isEnabled = true;
@@ -20,6 +21,9 @@ static int imageColor = 1;
 static int themesOrImage = 0;
 static bool hideCarrierText = false;
 static bool hideTimeText = false;
+static bool usingiPadStyle = false;
+static NSData *userCustomImageData = nil;
+static UIImageView *gifImage;
 //Custom Text
 static bool isCustomTextEnabled = false;
 static bool textInFrontOfCarrierText = false;
@@ -33,6 +37,7 @@ static NSString *customCarrier = @"";
 static bool adjustFontSize = true;
 //Custom Theme
 static XENTheme *currentTheme;
+static XENGIFTheme *currentGIFTheme;
 
 @interface _UIStatusBarItem : NSObject
 @end
@@ -41,10 +46,15 @@ static XENTheme *currentTheme;
 @end
 
 @interface _UIStatusBarStringView : UILabel
-@property (nonatomic,copy) NSString * originalText; 
+@property (nonatomic,copy) NSString * originalText;
 @property (nonatomic, assign) BOOL isServiceView;
 @property (nonatomic, assign) BOOL isTime;
 -(void)setText:(id)arg1;
+@end
+
+@interface _UIStatusBarTimeItem : _UIStatusBarItem
+@property (nonatomic, retain) _UIStatusBarStringView * shortTimeView;
+@property (nonatomic, retain) _UIStatusBarStringView * pillTimeView;
 @end
 
 @interface SBStatusBarStateAggregator : NSObject
@@ -61,257 +71,448 @@ static XENTheme *currentTheme;
 @end
 
 %group Xeon
-%hook _UIStatusBarCellularItem 
--(_UIStatusBarStringView *)serviceNameView {
-	_UIStatusBarStringView *orig = %orig;
-	orig.isServiceView = TRUE;
-	return orig;
-}
-%end
+	%hook _UIStatusBarCellularItem 
+	-(_UIStatusBarStringView *)serviceNameView {
+		_UIStatusBarStringView *orig = %orig;
+		orig.isServiceView = TRUE;
+		return orig;
+	}
+	%end
+
+	%hook _UIStatusBarTimeItem
+	-(_UIStatusBarStringView *)shortTimeView{
+		_UIStatusBarStringView *orig = %orig;
+		orig.isTime = TRUE;
+		return orig;
+	}
+	%end
 %end
 
 %group XENCustomImage
-%hook _UIStatusBarStringView
-%property (nonatomic, assign) BOOL isServiceView;
-%property (nonatomic, assign) BOOL isTime;
--(void)setText:(id)arg1 {
-	%orig;
+	%hook _UIStatusBarStringView
+	%property (nonatomic, assign) BOOL isServiceView;
+	%property (nonatomic, assign) BOOL isTime;
+	-(void)setText:(id)arg1 {
+		%orig;
 
-	if (whereToPutImage == 0) {
-		imageInFrontOfCarrierText = true;
-		imageInFrontOfTimeText = false;
-	} else if (whereToPutImage == 1) {
-		imageInFrontOfCarrierText = false;
-		imageInFrontOfTimeText = true;
-	} else if (whereToPutImage == 2) {
-		imageInFrontOfCarrierText = true;
-		imageInFrontOfTimeText = true;
-	}
+		for(UIView *subview in [self subviews]) {
+			[subview removeFromSuperview];
+		}
 
-	if (self.isServiceView) {
-		if (imageInFrontOfCarrierText) {
-			NSString *space = @" ";
+		if (whereToPutImage == 0) {
+			imageInFrontOfCarrierText = true;
+			imageInFrontOfTimeText = false;
+		} else if (whereToPutImage == 1) {
+			imageInFrontOfCarrierText = false;
+			imageInFrontOfTimeText = true;
+		} else if (whereToPutImage == 2) {
+			imageInFrontOfCarrierText = true;
+			imageInFrontOfTimeText = true;
+		}
+
+		if (themesOrImage == 0 || themesOrImage == 1) {
+			if (self.isServiceView) {
+				if (imageInFrontOfCarrierText) {
+					NSString *space = @" ";
+					NSString *carrierText = [space stringByAppendingString:arg1];
+					if (hideCarrierText) {
+						carrierText = @"";
+					}
+
+					UIImage *userCustomImage = [UIImage imageWithData:userCustomImageData];
+
+					UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
+					if (!img) {
+						img = [currentTheme getIcon:@"logo@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"etched@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"black@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"silber@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"dark@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"light@3x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"light@2x.png"];
+					}
+
+					UIImage *newImage = nil;
+
+					if (themesOrImage == 0) {
+						if (hideCarrierText) {
+							newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
+						} else {
+							newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+						}
+					} else {
+						if (hideCarrierText) {
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
+						} else {
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+						}
+					}
+
+					if (imageColor == 0) {
+						newImage = [newImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+					}
+
+					NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
+					imageAttachment.image = newImage;
+					CGFloat imageOffsetY = -5.0;
+					imageAttachment.bounds = CGRectMake(0, imageOffsetY, imageAttachment.image.size.width, imageAttachment.image.size.height);
+					NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:imageAttachment];
+					
+					NSMutableAttributedString *imageFixText = [[NSMutableAttributedString alloc] initWithAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
+					[imageFixText appendAttributedString:attachmentString];
+					[imageFixText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:0] range:NSMakeRange(0, imageFixText.length)];
+					[imageFixText appendAttributedString:[[NSAttributedString alloc] initWithString:@""]];
+
+					NSMutableAttributedString *completeText = [[NSMutableAttributedString alloc] initWithString:@""];
+					[completeText appendAttributedString:imageFixText];
+					NSMutableAttributedString *textAfterIcon = [[NSMutableAttributedString alloc] initWithString:carrierText];
+					[completeText appendAttributedString:textAfterIcon];
+					self.textAlignment = NSTextAlignmentRight;
+					self.attributedText = completeText;
+				} else {
+					%orig;
+				}
+			}
+
+			if (self.isTime) {
+				if (imageInFrontOfTimeText) {
+					NSString *space = @" ";
+					NSString *carrierText = [space stringByAppendingString:arg1];
+					if (hideTimeText) {
+						carrierText = @"";
+					}
+
+					UIImage *userCustomImage = [UIImage imageWithData:userCustomImageData];
+
+					UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
+					if (!img) {
+						img = [currentTheme getIcon:@"logo@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"etched@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"black@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"silber@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"dark@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"light@3x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"light@2x.png"];
+					}
+
+					UIImage *newImage = nil;
+
+					if (themesOrImage == 0) {
+						if (hideTimeText) {
+							newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
+						} else {
+							newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+						}
+					} else {
+						if (hideTimeText) {
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
+						} else {
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+						}
+					}
+
+					if (imageColor == 0) {
+						newImage = [newImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+					}
+
+					NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
+					imageAttachment.image = newImage;
+					CGFloat imageOffsetY = -5.0;
+					imageAttachment.bounds = CGRectMake(0, imageOffsetY, imageAttachment.image.size.width, imageAttachment.image.size.height);
+					NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:imageAttachment];
+					
+					NSMutableAttributedString *imageFixText = [[NSMutableAttributedString alloc] initWithAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
+					[imageFixText appendAttributedString:attachmentString];
+					[imageFixText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:0] range:NSMakeRange(0, imageFixText.length)];
+					[imageFixText appendAttributedString:[[NSAttributedString alloc] initWithString:@""]];
+
+					NSMutableAttributedString *completeText = [[NSMutableAttributedString alloc] initWithString:@""];
+					[completeText appendAttributedString:imageFixText];
+					NSMutableAttributedString *textAfterIcon = [[NSMutableAttributedString alloc] initWithString:carrierText];
+					[completeText appendAttributedString:textAfterIcon];
+					self.textAlignment = NSTextAlignmentRight;
+					self.attributedText = completeText;
+					if (adjustFontSize) {
+						[self setAdjustsFontSizeToFitWidth:YES];
+					}
+				} else {
+					%orig;
+				}
+			}
+
+			if (usingiPadStyle && [arg1 containsString:@":"]) {
+				if (imageInFrontOfTimeText) {
+					NSString *space = @" ";
+					NSString *carrierText = [space stringByAppendingString:arg1];
+					if (hideTimeText) {
+						carrierText = @"";
+					}
+
+					UIImage *userCustomImage = [UIImage imageWithData:userCustomImageData];
+
+					UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
+					if (!img) {
+						img = [currentTheme getIcon:@"logo@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"etched@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"black@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"silber@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"dark@2x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"light@3x.png"];
+					}
+					if (!img) {
+						img = [currentTheme getIcon:@"light@2x.png"];
+					}
+
+					UIImage *newImage = nil;
+
+					if (themesOrImage == 0) {
+						if (hideTimeText) {
+							newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
+						} else {
+							newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+						}
+					} else {
+						if (hideTimeText) {
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
+						} else {
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+						}
+					}
+
+					if (imageColor == 0) {
+						newImage = [newImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+					}
+
+					NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
+					imageAttachment.image = newImage;
+					CGFloat imageOffsetY = -5.0;
+					imageAttachment.bounds = CGRectMake(0, imageOffsetY, imageAttachment.image.size.width, imageAttachment.image.size.height);
+					NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:imageAttachment];
+					
+					NSMutableAttributedString *imageFixText = [[NSMutableAttributedString alloc] initWithAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
+					[imageFixText appendAttributedString:attachmentString];
+					[imageFixText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:0] range:NSMakeRange(0, imageFixText.length)];
+					[imageFixText appendAttributedString:[[NSAttributedString alloc] initWithString:@""]];
+
+					NSMutableAttributedString *completeText = [[NSMutableAttributedString alloc] initWithString:@""];
+					[completeText appendAttributedString:imageFixText];
+					NSMutableAttributedString *textAfterIcon = [[NSMutableAttributedString alloc] initWithString:carrierText];
+					[completeText appendAttributedString:textAfterIcon];
+					self.textAlignment = NSTextAlignmentRight;
+					self.attributedText = completeText;
+					if (adjustFontSize) {
+						[self setAdjustsFontSizeToFitWidth:YES];
+					}
+				} else {
+					%orig;
+				}
+			}
+		}
+
+		if (themesOrImage == 2 || themesOrImage == 3) {
+			NSString *space = @"        ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
-			if (hideCarrierText) {
-				carrierText = @"";
-			}
-
-			NSString *const imagesDomain = @"com.peterdev.xeon";
-			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-			UIImage *userCustomImage = [UIImage imageWithData:data];
-			//UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
-
-			UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
-			if (!img) {
-				img = [currentTheme getIcon:@"logo@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"etched@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"black@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"silber@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"dark@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"light@3x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"light@2x.png"];
-			}
-
-			UIImage *newImage = nil;
-
-			if (themesOrImage == 0) {
-				if (hideCarrierText) {
-					newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
-				} else {
-					newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
-				}
-			} else {
-				if (hideCarrierText) {
-					newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
-				} else {
-					newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
-				}
-			}
-
-			if (imageColor == 0) {
-				newImage = [newImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-			}
-
-			NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
-			imageAttachment.image = newImage;
-			CGFloat imageOffsetY = -5.0;
-			imageAttachment.bounds = CGRectMake(0, imageOffsetY, imageAttachment.image.size.width, imageAttachment.image.size.height);
-			NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:imageAttachment];
 			
-			NSMutableAttributedString *imageFixText = [[NSMutableAttributedString alloc] initWithAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
-			[imageFixText appendAttributedString:attachmentString];
-    		[imageFixText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:0] range:NSMakeRange(0, imageFixText.length)];
-    		[imageFixText appendAttributedString:[[NSAttributedString alloc] initWithString:@""]];
+			if (self.isServiceView && imageInFrontOfCarrierText) {
+				%orig(carrierText);
+				NSData *gifImageData = [currentGIFTheme getGIFData:@"animated.gif"];
 
-			NSMutableAttributedString *completeText = [[NSMutableAttributedString alloc] initWithString:@""];
-			[completeText appendAttributedString:imageFixText];
-			NSMutableAttributedString *textAfterIcon = [[NSMutableAttributedString alloc] initWithString:carrierText];
-			[completeText appendAttributedString:textAfterIcon];
-			self.textAlignment = NSTextAlignmentRight;
-			self.attributedText = completeText;
+				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
+				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
+
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-4,25,25)];
+				if (themesOrImage == 2) {
+					gifImage.image = animatedimg;
+				} else {
+					gifImage.image = userCustomImage;
+				}
+
+				[self addSubview:gifImage];
+			}
+
+			if (self.isTime && imageInFrontOfTimeText) {
+				%orig(carrierText);
+				NSData *gifImageData = [currentGIFTheme getGIFData:@"animated.gif"];
+
+				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
+				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
+
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-4,25,25)];
+				if (themesOrImage == 2) {
+					gifImage.image = animatedimg;
+				} else {
+					gifImage.image = userCustomImage;
+				}
+
+				[self addSubview:gifImage];
+			}
+
+			if (usingiPadStyle && [arg1 containsString:@":"]) {
+				%orig(carrierText);
+				UIImage *img = [currentGIFTheme getGIFIcon:@"animated.gif"];
+				NSData *gifImageData = [currentGIFTheme getGIFData:@"animated.gif"];
+
+				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
+				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
+
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-4,25,25)];
+				if (themesOrImage == 2) {
+					gifImage.image = animatedimg;
+				} else {
+					gifImage.image = userCustomImage;
+				}
+
+				[self addSubview:gifImage];
+			}
 		}
 	}
-
-	if (imageInFrontOfTimeText) {
-		if ([arg1 containsString:@":"]) {
-			NSString *space = @" ";
-			NSString *carrierText = [space stringByAppendingString:arg1];
-			if (hideTimeText) {
-				carrierText = @"";
-			}
-
-			NSString *const imagesDomain = @"com.peterdev.xeon";
-			NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-			UIImage *userCustomImage = [UIImage imageWithData:data];
-			//UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
-
-			UIImage *img = [currentTheme getIcon:@"logo@3x.png"];
-			if (!img) {
-				img = [currentTheme getIcon:@"logo@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"etched@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"black@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"silber@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"dark@2x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"light@3x.png"];
-			}
-			if (!img) {
-				img = [currentTheme getIcon:@"light@2x.png"];
-			}
-
-			UIImage *newImage = nil;
-
-			if (themesOrImage == 0) {
-				if (hideTimeText) {
-					newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
-				} else {
-					newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
-				}
-			} else {
-				if (hideTimeText) {
-					newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
-				} else {
-					newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
-				}
-			}
-
-			if (imageColor == 0) {
-				newImage = [newImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-			}
-
-			NSTextAttachment *imageAttachment = [[NSTextAttachment alloc] init];
-			imageAttachment.image = newImage;
-			CGFloat imageOffsetY = -5.0;
-			imageAttachment.bounds = CGRectMake(0, imageOffsetY, imageAttachment.image.size.width, imageAttachment.image.size.height);
-			NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:imageAttachment];
-			
-			NSMutableAttributedString *imageFixText = [[NSMutableAttributedString alloc] initWithAttributedString:[[NSAttributedString alloc] initWithString:@" "]];
-			[imageFixText appendAttributedString:attachmentString];
-    		[imageFixText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:0] range:NSMakeRange(0, imageFixText.length)];
-    		[imageFixText appendAttributedString:[[NSAttributedString alloc] initWithString:@""]];
-
-			NSMutableAttributedString *completeText = [[NSMutableAttributedString alloc] initWithString:@""];
-			[completeText appendAttributedString:imageFixText];
-			NSMutableAttributedString *textAfterIcon = [[NSMutableAttributedString alloc] initWithString:carrierText];
-			[completeText appendAttributedString:textAfterIcon];
-			self.textAlignment = NSTextAlignmentRight;
-			self.attributedText = completeText;
-			if (adjustFontSize) {
-				[self setAdjustsFontSizeToFitWidth:YES];
-			}
-		}
-	}
-}
-%end
+	%end
 %end
 
 %group XENCustomText
-%hook _UIStatusBarStringView
-%property (nonatomic, assign) BOOL isServiceView;
-%property (nonatomic, assign) BOOL isTime;
--(void)setText:(id)arg1 {
-	%orig;
+	%hook _UIStatusBarStringView
+	%property (nonatomic, assign) BOOL isServiceView;
+	%property (nonatomic, assign) BOOL isTime;
+	-(void)setText:(id)arg1 {
+		%orig;
 
-	if (whereToPutText == 0) {
-		textInFrontOfCarrierText = true;
-		textInFrontOfTimeText = false;
-	} else if (whereToPutText == 1) {
-		textInFrontOfCarrierText = false;
-		textInFrontOfTimeText = true;
-	} else if (whereToPutText == 2) {
-		textInFrontOfCarrierText = true;
-		textInFrontOfTimeText = true;
-	}
+		if (whereToPutText == 0) {
+			textInFrontOfCarrierText = true;
+			textInFrontOfTimeText = false;
+		} else if (whereToPutText == 1) {
+			textInFrontOfCarrierText = false;
+			textInFrontOfTimeText = true;
+		} else if (whereToPutText == 2) {
+			textInFrontOfCarrierText = true;
+			textInFrontOfTimeText = true;
+		}
 
-	if (self.isServiceView) {
-		if (textInFrontOfCarrierText) {
-			NSString *carrierString = arg1;
-    		NSString *spyString = customText;
-    		NSString *statusString = [spyString stringByAppendingString:carrierString];
+		if (self.isServiceView) {
+			if (textInFrontOfCarrierText) {
+				NSString *carrierString = arg1;
+				NSString *spyString = customText;
+				NSString *statusString = [spyString stringByAppendingString:carrierString];
 
-    		%orig(statusString);
+				%orig(statusString);
+			}
+		}
+		
+		if (textInFrontOfTimeText) {
+			if ([arg1 containsString:@":"]) {
+				NSString *timeString = arg1;
+				NSString *spyString = customText;
+				NSString *statusString = [spyString stringByAppendingString:timeString];
+
+				%orig(statusString);
+			}
 		}
 	}
-	
-	if (textInFrontOfTimeText) {
-		if ([arg1 containsString:@":"]) {
-			NSString *timeString = arg1;
-    		NSString *spyString = customText;
-    		NSString *statusString = [spyString stringByAppendingString:timeString];
-
-    		%orig(statusString);
-		}
-	}
-}
-%end
+	%end
 %end
 
 %group XENCustomCarrier
-%hook SBTelephonySubscriptionInfo
--(NSString *)operatorName {
-  return customCarrier;
-}
-%end
+	%hook SBTelephonySubscriptionInfo
+	-(NSString *)operatorName {
+	return customCarrier;
+	}
+	%end
 %end
 
 %group debug
-%hook SBFLockScreenDateView
--(void)layoutSubviews {
-	NSString *const imagesDomain = @"com.peterdev.xeon";
-	NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"kUserCustomImage" inDomain:imagesDomain];
-	//UIImage *userCustomImage = [UIImage imageWithData:data];
-	UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:data];
+	%hook _UIStatusBarStringView
+	%property (nonatomic, assign) BOOL isServiceView;
+	%property (nonatomic, assign) BOOL isTime;
+	-(void)setText:(id)arg1 {
+		%orig;
 
-	UIImageView *pacman = nil;
-	if (!pacman) {
-		pacman = [[UIImageView alloc] initWithFrame:CGRectMake(50,50,20,20)];
-  		pacman.image = userCustomImage;
-  		[self addSubview:pacman];
+		for(UIView *subview in [self subviews]) {
+			[subview removeFromSuperview];
+		}
+
+		if (self.isServiceView) {
+			NSString *space = @"        ";
+			NSString *carrierText = [space stringByAppendingString:arg1];
+			%orig(carrierText);
+			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
+
+			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
+			gifImage.image = userCustomImage;
+			[self addSubview:gifImage];
+		}
+
+		if (self.isTime) {
+			NSString *space = @"        ";
+			NSString *carrierText = [space stringByAppendingString:arg1];
+			%orig(carrierText);
+			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
+			
+			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
+			gifImage.image = userCustomImage;
+			[self addSubview:gifImage];
+		}
+
+		if (!self.isTime && [arg1 containsString:@":"]) {
+			NSString *space = @"        ";
+			NSString *carrierText = [space stringByAppendingString:arg1];
+			%orig(carrierText);
+			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
+			
+			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
+			gifImage.image = userCustomImage;
+			[self addSubview:gifImage];
+		}
 	}
-	%orig;
-}
-%end
+	%end
+
+	%hook _UIStatusBarCellularItem 
+	-(_UIStatusBarStringView *)serviceNameView {
+		_UIStatusBarStringView *orig = %orig;
+		orig.isServiceView = TRUE;
+		return orig;
+	}
+	%end
+
+	%hook _UIStatusBarTimeItem
+	-(_UIStatusBarStringView *)shortTimeView{
+		_UIStatusBarStringView *orig = %orig;
+		orig.isTime = TRUE;
+		return orig;
+	}
+	%end
 %end
 
 void loadPrefs() {
@@ -325,6 +526,8 @@ void loadPrefs() {
 	themesOrImage = [([file objectForKey:@"kThemesOrImages"] ?: @(0)) intValue];
 	hideCarrierText = [([file objectForKey:@"kHideCarrierText"] ?: @(NO)) boolValue];
 	hideTimeText = [([file objectForKey:@"kHideTimeText"] ?: @(NO)) boolValue];
+	userCustomImageData = [file objectForKey:@"kUserCustomImage"];
+	usingiPadStyle = [([file objectForKey:@"kiPadStyle"] ?: @(NO)) boolValue];
 	//Custim Text
 	isCustomTextEnabled = [([file objectForKey:@"kEnableCustomText"] ?: @(NO)) boolValue];
 	whereToPutText = [([file objectForKey:@"kWhereToPutText"] ?: @(0)) intValue];
@@ -342,8 +545,13 @@ void loadPrefs() {
     if(!iconTheme){
         iconTheme = @"Classic Apple";
     }
-
 	currentTheme = [XENTheme themeWithPath:[XENThemesDirectory stringByAppendingPathComponent:iconTheme]];
+	//Custom GIF Theme
+	NSString *gifTheme = [file objectForKey:@"GIFTheme"];
+    if(!gifTheme){
+        gifTheme = @"Pac-Man";
+    }
+	currentGIFTheme = [XENGIFTheme gifThemeWithPath:[XENGIFThemesDirectory stringByAppendingPathComponent:gifTheme]];
 }
 
 %ctor {
@@ -352,9 +560,9 @@ void loadPrefs() {
 
 	if (isEnabled) {
 		if (debug) %init(debug);
-		if (isCustomImageEnabled || isCustomTextEnabled) %init(Xeon);
-		if (isCustomImageEnabled) %init(XENCustomImage);
-		if (isCustomTextEnabled) %init(XENCustomText);
-		if (isCustomCarrierEnabled) %init(XENCustomCarrier);
+		if (!debug && (isCustomImageEnabled || isCustomTextEnabled)) %init(Xeon);
+		if (!debug && isCustomImageEnabled) %init(XENCustomImage);
+		if (!debug && isCustomTextEnabled) %init(XENCustomText);
+		if (!debug && isCustomCarrierEnabled) %init(XENCustomCarrier);
 	}
 }

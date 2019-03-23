@@ -3,7 +3,7 @@ ARCHS = arm64 arm64e
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = XeonPrefs
-XeonPrefs_FILES = XENRootListController.m XENCreditListController.m IconThemes.m XENCommon.m ../headers/UIImage+ScaledImage.m
+XeonPrefs_FILES = XENRootListController.m XENCreditListController.m IconThemes.m XENCommon.m GIFThemes.m XENGIFCommon.m ../headers/UIImage+ScaledImage.m
 XeonPrefs_INSTALL_PATH = /Library/PreferenceBundles
 XeonPrefs_FRAMEWORKS = UIKit
 XeonPrefs_PRIVATE_FRAMEWORKS = Preferences

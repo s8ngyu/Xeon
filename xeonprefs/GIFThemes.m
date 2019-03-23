@@ -1,13 +1,13 @@
-#import "IconThemes.h"
+#import "GIFThemes.h"
 #import "XENRootListController.h"
 
-@interface XENAlignedTableViewCell : UITableViewCell {
+@interface XENGIFAlignedTableViewCell : UITableViewCell {
 }
 @end
 
 #define MARGIN 5
 
-@implementation XENAlignedTableViewCell
+@implementation XENGIFAlignedTableViewCell
 - (void) layoutSubviews {
     [super layoutSubviews];
     CGRect cvf = self.contentView.frame;
@@ -32,7 +32,7 @@
 }
 @end
 
-@implementation XENIconThemesListController
+@implementation XENGIFIconThemesListController
 
 @synthesize themes = _themes;
 
@@ -60,11 +60,11 @@
     NSArray *diskThemes = [manager contentsOfDirectoryAtPath:directory error:nil];
     
     for (NSString *dirName in diskThemes) {
-        NSString *path = [XENThemesDirectory stringByAppendingPathComponent:dirName];
-        XENTheme *theme = [XENTheme themeWithPath:path];
+        NSString *path = [XENGIFThemesDirectory stringByAppendingPathComponent:dirName];
+        XENGIFTheme *theme = [XENGIFTheme gifThemeWithPath:path];
         
         if (theme) {
-            [theme preparePreviewImage];
+            [theme preparePreviewGIFImage];
             [self.themes addObject:theme];
         }
     }
@@ -72,14 +72,14 @@
 
 - (void)refreshList {
     self.themes = [[NSMutableArray alloc] initWithCapacity:100];
-    [self addThemesFromDirectory: XENThemesDirectory];
+    [self addThemesFromDirectory: XENGIFThemesDirectory];
             
-    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES selector:@selector(caseInsensitiveCompare:)];
+    NSSortDescriptor *descriptor = [[NSSortDescriptor alloc] initWithKey:@"gifName" ascending:YES selector:@selector(caseInsensitiveCompare:)];
     [self.themes sortUsingDescriptors:[NSArray arrayWithObject:descriptor]];
     [descriptor release];
     
     HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"com.peterdev.xeon"];
-    selectedTheme = [([file objectForKey:@"IconTheme"] ?: @"Classic Apple") stringValue];
+    selectedTheme = [([file objectForKey:@"GIFTheme"] ?: @"Pac-Man") stringValue];
 }
 
 - (id)view {
@@ -87,7 +87,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    self.navigationItem.title = @"Themes";
+    self.navigationItem.title = @"GIF Themes";
     [self refreshList];
 }
 
@@ -101,7 +101,7 @@
 }
 
 - (NSString*)navigationTitle {
-	return @"Themes";
+	return @"GIF Themes";
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
@@ -115,19 +115,19 @@
 - (UITableViewCell *) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ThemeCell"];
     if (!cell) {
-        cell = [[XENAlignedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ThemeCell"];
+        cell = [[XENGIFAlignedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ThemeCell"];
     }
     
-    XENTheme *theme = [self.currentThemes objectAtIndex:indexPath.row];
+    XENGIFTheme *theme = [self.currentThemes objectAtIndex:indexPath.row];
 
-    UIImage *resizedImage = [theme.image scaleImageToSize:CGSizeMake(20, 20)];
-    cell.textLabel.text = theme.name;
+    UIImage *resizedImage = [theme.gifImage scaleImageToSize:CGSizeMake(20, 20)];
+    cell.textLabel.text = theme.gifName;
     cell.imageView.image = resizedImage;
     cell.imageView.highlightedImage = resizedImage;
     cell.imageView.clipsToBounds = YES;
     cell.selected = NO;
 
-    if ([theme.name isEqualToString: selectedTheme] && !tableView.isEditing) {
+    if ([theme.gifName isEqualToString: selectedTheme] && !tableView.isEditing) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else if (!tableView.isEditing) {
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -139,20 +139,20 @@
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    UITableViewCell *old = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow: [[self.currentThemes valueForKey:@"name"] indexOfObject: selectedTheme] inSection: 0]];
+    UITableViewCell *old = [tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow: [[self.currentThemes valueForKey:@"gifName"] indexOfObject: selectedTheme] inSection: 0]];
     if (old) old.accessoryType = UITableViewCellAccessoryNone;
 
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.accessoryType = UITableViewCellAccessoryCheckmark;
 
-    XENTheme *theme = (XENTheme*)[self.currentThemes objectAtIndex:indexPath.row];
-    selectedTheme = theme.name;
+    XENGIFTheme *theme = (XENGIFTheme*)[self.currentThemes objectAtIndex:indexPath.row];
+    selectedTheme = theme.gifName;
 
     HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"com.peterdev.xeon"];
-    [file setObject:selectedTheme forKey:@"IconTheme"];
+    [file setObject:selectedTheme forKey:@"GIFTheme"];
 
     XENRootListController *parent = (XENRootListController *)self.parentController;
-    [parent setThemeName:selectedTheme];
+    [parent setGIFThemeName:selectedTheme];
 
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)XENNotification, nil, nil, true);
 }
