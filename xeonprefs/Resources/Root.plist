@@ -232,7 +232,7 @@
 			<key>cell</key>
 			<string>PSStaticTextCell</string>
 			<key>label</key>
-			<string>Static Image Size</string>
+			<string>Image Size</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -253,6 +253,32 @@
 			<true/>
 			<key>segmentCount</key>
 			<real>10</real>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSStaticTextCell</string>
+			<key>label</key>
+			<string>GIF Image Padding</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>default</key>
+			<real>0</real>
+			<key>defaults</key>
+			<string>com.peterdev.xeon</string>
+			<key>key</key>
+			<string>kGIFPadding</string>
+			<key>min</key>
+			<real>-5</real>
+			<key>max</key>
+			<real>0</real>
+			<key>showValue</key>
+			<true/>
+			<key>isSegmented</key>
+			<true/>
+			<key>segmentCount</key>
+			<real>5</real>
 		</dict>
 
 		<!--Custom Text-->

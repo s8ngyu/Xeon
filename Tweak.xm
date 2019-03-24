@@ -25,6 +25,7 @@ static bool usingiPadStyle = false;
 static NSData *userCustomImageData = nil;
 static UIImageView *gifImage;
 static int staticImageSize = 20;
+static int gifImagePadding = 0;
 //Custom Text
 static bool isCustomTextEnabled = false;
 static bool textInFrontOfCarrierText = false;
@@ -349,13 +350,17 @@ static XENGIFTheme *currentGIFTheme;
 			NSString *carrierText = [space stringByAppendingString:arg1];
 			
 			if (self.isServiceView && imageInFrontOfCarrierText) {
-				%orig(carrierText);
+				if (hideCarrierText) {
+					%orig(space);
+				} else {
+					%orig(carrierText);
+				}
 				NSData *gifImageData = [currentGIFTheme getGIFData:@"animated.gif"];
 
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
 				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 
-				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, -4, staticImageSize, staticImageSize)];
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, gifImagePadding, staticImageSize, staticImageSize)];
 				if (themesOrImage == 2) {
 					gifImage.image = animatedimg;
 				} else {
@@ -366,16 +371,22 @@ static XENGIFTheme *currentGIFTheme;
 			}
 
 			if (self.isTime && imageInFrontOfTimeText) {
-				%orig(carrierText);
+				if (hideTimeText) {
+					%orig(space);
+				} else {
+					%orig(carrierText);
+				}
+
 				if (adjustFontSize) {
 					[self setAdjustsFontSizeToFitWidth:YES];
 				}
+
 				NSData *gifImageData = [currentGIFTheme getGIFData:@"animated.gif"];
 
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
 				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 
-				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, -4, staticImageSize, staticImageSize)];
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, gifImagePadding, staticImageSize, staticImageSize)];
 				if (themesOrImage == 2) {
 					gifImage.image = animatedimg;
 				} else {
@@ -385,14 +396,22 @@ static XENGIFTheme *currentGIFTheme;
 				[self addSubview:gifImage];
 			}
 
-			if (usingiPadStyle && [arg1 containsString:@":"]) {
-				%orig(carrierText);
+			if (!self.isTime && usingiPadStyle && [arg1 containsString:@":"]) {
+				NSString *sp1 = @"      ";
+				NSString *ct1 = [sp1 stringByAppendingString:arg1];
+
+				if (hideTimeText) {
+					%orig(sp1);
+				} else {
+					%orig(ct1);
+				}
+
 				NSData *gifImageData = [currentGIFTheme getGIFData:@"animated.gif"];
 
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
 				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 
-				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, staticImageSize - 5, staticImageSize - 5)];
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, gifImagePadding, staticImageSize - 5, staticImageSize - 5)];
 				if (themesOrImage == 2) {
 					gifImage.image = animatedimg;
 				} else {
@@ -444,7 +463,7 @@ static XENGIFTheme *currentGIFTheme;
 			}
 		}
 
-		if (usingiPadStyle && [arg1 containsString:@":"]) {
+		if (!self.isTime && usingiPadStyle && [arg1 containsString:@":"]) {
 			if (textInFrontOfTimeText) {
 				NSString *timeString = arg1;
 				NSString *spyString = customText;
@@ -460,7 +479,7 @@ static XENGIFTheme *currentGIFTheme;
 %group XENCustomCarrier
 	%hook SBTelephonySubscriptionInfo
 	-(NSString *)operatorName {
-	return customCarrier;
+		return customCarrier;
 	}
 	%end
 %end
@@ -498,7 +517,7 @@ static XENGIFTheme *currentGIFTheme;
 			[self addSubview:gifImage];
 		}
 
-		if (!self.isTime && [arg1 containsString:@":"]) {
+		if (!self.isTime && usingiPadStyle && [arg1 containsString:@":"]) {
 			NSString *space = @"        ";
 			NSString *carrierText = [space stringByAppendingString:arg1];
 			%orig(carrierText);
@@ -542,6 +561,7 @@ void loadPrefs() {
 	userCustomImageData = [file objectForKey:@"kUserCustomImage"];
 	usingiPadStyle = [([file objectForKey:@"kiPadStyle"] ?: @(NO)) boolValue];
 	staticImageSize = [([file objectForKey:@"kStaticImageSize"] ?: @(20)) intValue];
+	gifImagePadding = [([file objectForKey:@"kGIFPadding"] ?: @(0)) intValue];
 	//Custim Text
 	isCustomTextEnabled = [([file objectForKey:@"kEnableCustomText"] ?: @(NO)) boolValue];
 	whereToPutText = [([file objectForKey:@"kWhereToPutText"] ?: @(0)) intValue];
