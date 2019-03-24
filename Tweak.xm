@@ -97,7 +97,7 @@ static XENGIFTheme *currentGIFTheme;
 	-(void)setText:(id)arg1 {
 		%orig;
 
-		for(UIView *subview in [self subviews]) {
+		for (UIView *subview in [self subviews]) {
 			[subview removeFromSuperview];
 		}
 
@@ -116,7 +116,13 @@ static XENGIFTheme *currentGIFTheme;
 			if (self.isServiceView) {
 				if (imageInFrontOfCarrierText) {
 					NSString *space = @" ";
-					NSString *carrierText = [space stringByAppendingString:arg1];
+					NSString *carrierText = arg1;
+					if (arg1 != nil) {
+						carrierText = [space stringByAppendingString:arg1];
+					} else {
+						%orig(space);
+					}
+
 					if (hideCarrierText) {
 						carrierText = @"";
 					}
@@ -191,7 +197,14 @@ static XENGIFTheme *currentGIFTheme;
 			if (self.isTime) {
 				if (imageInFrontOfTimeText) {
 					NSString *space = @" ";
-					NSString *carrierText = [space stringByAppendingString:arg1];
+					NSString *carrierText = arg1;
+
+					if (arg1 != nil) {
+						carrierText = [space stringByAppendingString:arg1];
+					} else {
+						%orig(space);
+					}
+					
 					if (hideTimeText) {
 						carrierText = @"";
 					}
@@ -269,7 +282,14 @@ static XENGIFTheme *currentGIFTheme;
 			if (usingiPadStyle && [arg1 containsString:@":"]) {
 				if (imageInFrontOfTimeText) {
 					NSString *space = @" ";
-					NSString *carrierText = [space stringByAppendingString:arg1];
+					NSString *carrierText = arg1;
+					
+					if (arg1 != nil) {
+						carrierText = [space stringByAppendingString:arg1];
+					} else {
+						%orig(space);
+					}
+					
 					if (hideTimeText) {
 						carrierText = @"";
 					}
@@ -347,9 +367,17 @@ static XENGIFTheme *currentGIFTheme;
 
 		if (themesOrImage == 2 || themesOrImage == 3) {
 			NSString *space = @"        ";
-			NSString *carrierText = [space stringByAppendingString:arg1];
+			NSString *carrierText = arg1;
+
+			if (arg1 != nil) {
+				carrierText = [space stringByAppendingString:arg1];
+			}
 			
 			if (self.isServiceView && imageInFrontOfCarrierText) {
+				if (arg1 == nil) {
+					%orig(space);
+				}
+
 				if (hideCarrierText) {
 					%orig(space);
 				} else {
@@ -371,6 +399,10 @@ static XENGIFTheme *currentGIFTheme;
 			}
 
 			if (self.isTime && imageInFrontOfTimeText) {
+				if (arg1 == nil) {
+					%orig(space);
+				}
+
 				if (hideTimeText) {
 					%orig(space);
 				} else {
@@ -398,7 +430,13 @@ static XENGIFTheme *currentGIFTheme;
 
 			if (!self.isTime && usingiPadStyle && [arg1 containsString:@":"]) {
 				NSString *sp1 = @"      ";
-				NSString *ct1 = [sp1 stringByAppendingString:arg1];
+				NSString *ct1 = arg1;
+
+				if (arg1 != nil) {
+					ct1 = [sp1 stringByAppendingString:arg1];
+				} else {
+					%orig(sp1);
+				}
 
 				if (hideTimeText) {
 					%orig(sp1);
