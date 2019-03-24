@@ -35,6 +35,9 @@ static NSString *customText = @"";
 //Custom Carrier
 static bool isCustomCarrierEnabled = false;
 static NSString *customCarrier = @"";
+//Custom Cellular Text
+static bool isCustomCellularTextEnabled = false;
+static NSString *customCellularText = @"";
 //Other Settings
 static bool adjustFontSize = true;
 //Custom Theme
@@ -522,6 +525,24 @@ static XENGIFTheme *currentGIFTheme;
 	%end
 %end
 
+%group XENCustomCellularText
+	%hook _UIStatusBarStringView
+	%property (nonatomic, assign) BOOL isServiceView;
+	%property (nonatomic, assign) BOOL isTime;
+	-(void)setText:(id)arg1 {
+		%orig;
+		if (!self.isServiceView && !self.isTime && ![arg1 containsString:@":"]) {
+			NSArray *cellularArray = [NSArray arrayWithObjects:@"2G", @"3G", @"4G", @"LTE", @"5Gᴱ", nil];
+			if ([cellularArray containsObject:arg1]) {
+				%orig(customCellularText);
+			} else {
+				%orig;
+			}
+		}
+	}
+	%end
+%end
+
 %group debug
 	%hook _UIStatusBarStringView
 	%property (nonatomic, assign) BOOL isServiceView;
@@ -609,6 +630,10 @@ void loadPrefs() {
 	isCustomCarrierEnabled = [([file objectForKey:@"kEnableCustomCarrier"] ?: @(NO)) boolValue];
 	customCarrier = [file objectForKey:@"kCustomCarrier"];
 	if (!customCarrier) customCarrier = @"";
+	//Custom Cellular Text
+	isCustomCellularTextEnabled = [([file objectForKey:@"kEnableCustomCellularText"] ?: @(NO)) boolValue];
+	customCellularText = [file objectForKey:@"kCustomCellularText"];
+	if (!customCellularText) customCellularText = @"";
 	//Other Settings
 	adjustFontSize = [([file objectForKey:@"kAdjustFontSize"] ?: @(YES)) boolValue];
 
@@ -638,5 +663,6 @@ void loadPrefs() {
 			if (!debug && isCustomTextEnabled) %init(XENCustomText);
 		}
 		if (!debug && isCustomCarrierEnabled) %init(XENCustomCarrier);
+		if (!debug && isCustomCellularTextEnabled) %init(XENCustomCellularText);
 	}
 }
