@@ -24,6 +24,7 @@ static bool hideTimeText = false;
 static bool usingiPadStyle = false;
 static NSData *userCustomImageData = nil;
 static UIImageView *gifImage;
+static int staticImageSize = 20;
 //Custom Text
 static bool isCustomTextEnabled = false;
 static bool textInFrontOfCarrierText = false;
@@ -148,15 +149,15 @@ static XENGIFTheme *currentGIFTheme;
 
 					if (themesOrImage == 0) {
 						if (hideCarrierText) {
-							newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
+							newImage = [img scaleImageToSize:CGSizeMake(40, staticImageSize)];
 						} else {
-							newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+							newImage = [img scaleImageToSize:CGSizeMake(staticImageSize, staticImageSize)];
 						}
 					} else {
 						if (hideCarrierText) {
-							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, staticImageSize)];
 						} else {
-							newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(staticImageSize, staticImageSize)];
 						}
 					}
 
@@ -222,16 +223,16 @@ static XENGIFTheme *currentGIFTheme;
 					UIImage *newImage = nil;
 
 					if (themesOrImage == 0) {
-						if (hideTimeText) {
-							newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
+						if (hideCarrierText) {
+							newImage = [img scaleImageToSize:CGSizeMake(40, staticImageSize)];
 						} else {
-							newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+							newImage = [img scaleImageToSize:CGSizeMake(staticImageSize, staticImageSize)];
 						}
 					} else {
-						if (hideTimeText) {
-							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
+						if (hideCarrierText) {
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, staticImageSize)];
 						} else {
-							newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(staticImageSize, staticImageSize)];
 						}
 					}
 
@@ -300,16 +301,16 @@ static XENGIFTheme *currentGIFTheme;
 					UIImage *newImage = nil;
 
 					if (themesOrImage == 0) {
-						if (hideTimeText) {
-							newImage = [img scaleImageToSize:CGSizeMake(40, 20)];
+						if (hideCarrierText) {
+							newImage = [img scaleImageToSize:CGSizeMake(40, staticImageSize)];
 						} else {
-							newImage = [img scaleImageToSize:CGSizeMake(20, 20)];
+							newImage = [img scaleImageToSize:CGSizeMake(staticImageSize, staticImageSize)];
 						}
 					} else {
-						if (hideTimeText) {
-							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, 20)];
+						if (hideCarrierText) {
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(40, staticImageSize)];
 						} else {
-							newImage = [userCustomImage scaleImageToSize:CGSizeMake(20, 20)];
+							newImage = [userCustomImage scaleImageToSize:CGSizeMake(staticImageSize, staticImageSize)];
 						}
 					}
 
@@ -391,7 +392,7 @@ static XENGIFTheme *currentGIFTheme;
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
 				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 
-				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-4,25,25)];
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,15,15)];
 				if (themesOrImage == 2) {
 					gifImage.image = animatedimg;
 				} else {
@@ -540,6 +541,7 @@ void loadPrefs() {
 	hideTimeText = [([file objectForKey:@"kHideTimeText"] ?: @(NO)) boolValue];
 	userCustomImageData = [file objectForKey:@"kUserCustomImage"];
 	usingiPadStyle = [([file objectForKey:@"kiPadStyle"] ?: @(NO)) boolValue];
+	staticImageSize = [([file objectForKey:@"kStaticImageSize"] ?: @(20)) intValue];
 	//Custim Text
 	isCustomTextEnabled = [([file objectForKey:@"kEnableCustomText"] ?: @(NO)) boolValue];
 	whereToPutText = [([file objectForKey:@"kWhereToPutText"] ?: @(0)) intValue];

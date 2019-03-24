@@ -39,12 +39,12 @@
 }
 
 - (void)setThemeName:(NSString *)name {
-    UITableViewCell *cell = [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:1]];
+    UITableViewCell *cell = [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:5 inSection:1]];
 	cell.detailTextLabel.text = name;
 }
 
 - (void)setGIFThemeName:(NSString *)name {
-    UITableViewCell *cell = [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:4 inSection:1]];
+    UITableViewCell *cell = [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:6 inSection:1]];
 	cell.detailTextLabel.text = name;
 }
 @end
