@@ -442,6 +442,16 @@ static XENGIFTheme *currentGIFTheme;
 				%orig(statusString);
 			}
 		}
+
+		if (usingiPadStyle && [arg1 containsString:@":"]) {
+			if (textInFrontOfTimeText) {
+				NSString *timeString = arg1;
+				NSString *spyString = customText;
+				NSString *statusString = [spyString stringByAppendingString:timeString];
+
+				%orig(statusString);
+			}
+		}
 	}
 	%end
 %end
