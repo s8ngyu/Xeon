@@ -355,7 +355,7 @@ static XENGIFTheme *currentGIFTheme;
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
 				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 
-				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-4,25,25)];
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, -4, staticImageSize, staticImageSize)];
 				if (themesOrImage == 2) {
 					gifImage.image = animatedimg;
 				} else {
@@ -375,7 +375,7 @@ static XENGIFTheme *currentGIFTheme;
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
 				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 
-				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-4,25,25)];
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, -4, staticImageSize, staticImageSize)];
 				if (themesOrImage == 2) {
 					gifImage.image = animatedimg;
 				} else {
@@ -392,7 +392,7 @@ static XENGIFTheme *currentGIFTheme;
 				UIImage *animatedimg = [UIImage animatedImageWithAnimatedGIFData:gifImageData];
 				UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
 
-				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,15,15)];
+				gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, staticImageSize - 5, staticImageSize - 5)];
 				if (themesOrImage == 2) {
 					gifImage.image = animatedimg;
 				} else {
