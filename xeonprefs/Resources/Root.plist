@@ -402,7 +402,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
-			<string>Custom Indicator Text</string>
+			<string>Custom Cellular Text</string>
 			<key>footerText</key>
 			<string>This requires respring to apply</string>
 		</dict>
