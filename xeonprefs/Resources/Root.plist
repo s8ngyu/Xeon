@@ -455,6 +455,27 @@
 			<string>Respring</string>
 		</dict>
 		<dict>
+			<key>action</key>
+			<string>resetPrefs:</string>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>isDestructive</key>
+			<true/>
+			<key>confirmation</key>
+			<dict>
+				<key>prompt</key>
+				<string>Are you sure to restore default settings?</string>
+				<key>title</key>
+				<string>Okay</string>
+				<key>okTitle</key>
+				<string>Okay</string>
+				<key>cancelTitle</key>
+				<string>Cancel</string>
+			</dict>
+			<key>label</key>
+			<string>Restore default settings and respring</string>
+		</dict>
+		<dict>
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>detail</key>
@@ -473,6 +494,16 @@
 			<string>Source code</string>
 			<key>url</key>
 			<string>https://github.com/peterprd/Xeon</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>HBLinkTableCell</string>
+			<key>label</key>
+			<string>Donate to PeterDev</string>
+			<key>subtitle</key>
+			<string>Support me!</string>
+			<key>url</key>
+			<string>https://paypal.me/peterdev</string>
 		</dict>
 	</array>
 	<key>title</key>

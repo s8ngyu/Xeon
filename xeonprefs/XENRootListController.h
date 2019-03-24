@@ -15,6 +15,7 @@
 
 @interface XENRootListController : HBRootListController
 - (void)respring:(id)sender;
+- (void)resetPrefs:(id)sender;
 - (void)setThemeName:(NSString *)name;
 - (void)setGIFThemeName:(NSString *)name;
 @end

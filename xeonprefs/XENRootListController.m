@@ -38,6 +38,13 @@
     posix_spawn(&pid, "/usr/bin/killall", NULL, NULL, (char* const*)args, NULL);
 }
 
+- (void)resetPrefs:(id)sender {
+    HBPreferences *prefs = [[HBPreferences alloc] initWithIdentifier:@"com.peterdev.xeon"];
+    [prefs removeAllObjects];
+
+    [self respring:sender];
+}
+
 - (void)setThemeName:(NSString *)name {
     UITableViewCell *cell = [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:5 inSection:1]];
 	cell.detailTextLabel.text = name;
