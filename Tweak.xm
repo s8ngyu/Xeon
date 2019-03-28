@@ -548,66 +548,6 @@ static XENGIFTheme *currentGIFTheme;
 %end
 
 %group debug
-	%hook _UIStatusBarStringView
-	%property (nonatomic, assign) BOOL isServiceView;
-	%property (nonatomic, assign) BOOL isTime;
-	-(void)setText:(id)arg1 {
-		%orig;
-
-		for(UIView *subview in [self subviews]) {
-			[subview removeFromSuperview];
-		}
-
-		if (self.isServiceView) {
-			NSString *space = @"        ";
-			NSString *carrierText = [space stringByAppendingString:arg1];
-			%orig(carrierText);
-			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
-
-			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
-			gifImage.image = userCustomImage;
-			[self addSubview:gifImage];
-		}
-
-		if (self.isTime) {
-			NSString *space = @"        ";
-			NSString *carrierText = [space stringByAppendingString:arg1];
-			%orig(carrierText);
-			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
-			
-			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
-			gifImage.image = userCustomImage;
-			[self addSubview:gifImage];
-		}
-
-		if (!self.isTime && usingiPadStyle && [arg1 containsString:@":"]) {
-			NSString *space = @"        ";
-			NSString *carrierText = [space stringByAppendingString:arg1];
-			%orig(carrierText);
-			UIImage *userCustomImage = [UIImage animatedImageWithAnimatedGIFData:userCustomImageData];
-			
-			gifImage = [[UIImageView alloc] initWithFrame:CGRectMake(0,-5,25,25)];
-			gifImage.image = userCustomImage;
-			[self addSubview:gifImage];
-		}
-	}
-	%end
-
-	%hook _UIStatusBarCellularItem 
-	-(_UIStatusBarStringView *)serviceNameView {
-		_UIStatusBarStringView *orig = %orig;
-		orig.isServiceView = TRUE;
-		return orig;
-	}
-	%end
-
-	%hook _UIStatusBarTimeItem
-	-(_UIStatusBarStringView *)shortTimeView{
-		_UIStatusBarStringView *orig = %orig;
-		orig.isTime = TRUE;
-		return orig;
-	}
-	%end
 %end
 
 void loadPrefs() {
@@ -657,7 +597,7 @@ void loadPrefs() {
 
 %ctor {
 	loadPrefs();
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, (CFStringRef)XENNotification, NULL, kNilOptions);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.peterdev.xeon/settingschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
 	if (isEnabled) {
 		if (debug) %init(debug);
