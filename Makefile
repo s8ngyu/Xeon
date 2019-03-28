@@ -1,5 +1,8 @@
 ARCHS = arm64 arm64e
 
+DEBUG=0
+FINALPACKAGE=0
+
 include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = Xeon
