@@ -34,7 +34,7 @@ static int whereToPutText = 0;
 static NSString *customText = @"";
 //Custom Carrier
 static bool isCustomCarrierEnabled = false;
-static NSString *customCarrier = @"";
+static NSString *customCarrier = nil;
 //Custom Cellular Text
 static bool isCustomCellularTextEnabled = false;
 static NSString *customCellularText = @"";
@@ -520,7 +520,11 @@ static XENGIFTheme *currentGIFTheme;
 %group XENCustomCarrier
 	%hook SBTelephonySubscriptionInfo
 	-(NSString *)operatorName {
-		return customCarrier;
+		if (%orig == nil) {
+			return nil;
+		} else {
+			return customCarrier;
+		}
 	}
 	%end
 %end
@@ -629,7 +633,7 @@ void loadPrefs() {
 	//Custom Carrier
 	isCustomCarrierEnabled = [([file objectForKey:@"kEnableCustomCarrier"] ?: @(NO)) boolValue];
 	customCarrier = [file objectForKey:@"kCustomCarrier"];
-	if (!customCarrier) customCarrier = @"";
+	if (!customCarrier) customCarrier = nil;
 	//Custom Cellular Text
 	isCustomCellularTextEnabled = [([file objectForKey:@"kEnableCustomCellularText"] ?: @(NO)) boolValue];
 	customCellularText = [file objectForKey:@"kCustomCellularText"];
