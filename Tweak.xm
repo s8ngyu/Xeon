@@ -12,6 +12,7 @@
 //Tweak Enabled
 static bool isEnabled = true;
 static bool debug = false; //Don't enable this.
+static bool xenPublic = true;
 //Custom Image
 static bool isCustomImageEnabled = true;
 static bool imageInFrontOfCarrierText = true;
@@ -74,6 +75,20 @@ static XENGIFTheme *currentGIFTheme;
 @interface SBFLockScreenDateView : UIView
 -(void)layoutSubviews;
 @end
+
+@interface _UIBatteryView : UIView
+@property (assign,nonatomic) BOOL showsPercentage;
+@property (nonatomic,retain) UILabel * percentageLabel;
+@end
+
+%group XENAll
+	%hook _UIBatteryView
+	-(void)layoutSubviews {
+		%orig;
+		self.showsPercentage = true;
+	}
+	%end
+%end
 
 %group Xeon
 	%hook _UIStatusBarCellularItem 
@@ -600,6 +615,7 @@ void loadPrefs() {
 	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.peterdev.xeon/settingschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 
 	if (isEnabled) {
+		if (!xenPublic) %init(XENAll);
 		if (debug) %init(debug);
 		if (!debug && (isCustomImageEnabled || isCustomTextEnabled)) %init(Xeon);
 		if (!debug && isCustomImageEnabled) %init(XENCustomImage);
