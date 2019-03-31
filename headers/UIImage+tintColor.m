@@ -2,7 +2,7 @@
 
 @implementation UIImage (tintColor)
 
-- (UIImage *)tintColorWithUIColor:(UIColor *)color {
+- (UIImage *)imageReplacedWithColor:(UIColor *)color {
     if (!color) {
         color = [UIColor whiteColor];
     }
@@ -17,6 +17,25 @@
     UIGraphicsEndImageContext();
 
     return newImage;
+}
+
+- (UIImage *)imageTintedWithColor:(UIColor *)color {
+     UIImage *image;
+     if (color) {
+        UIGraphicsBeginImageContextWithOptions([self size], NO, 0.0);
+        CGRect rect = CGRectZero;
+        rect.size = [self size];
+
+        [self drawInRect:rect];
+        [color set];
+        UIRectFillUsingBlendMode(rect, kCGBlendModeScreen);
+
+        [self drawInRect:rect blendMode:kCGBlendModeDestinationIn alpha:1.0f];
+
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+    return image;
 }
 
 @end

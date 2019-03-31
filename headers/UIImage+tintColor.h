@@ -1,5 +1,6 @@
 @interface UIImage (tintColor)
 
-- (UIImage *)tintColorWithUIColor:(UIColor *)color;
+- (UIImage *)imageReplacedWithColor:(UIColor *)color;
+- (UIImage *)imageTintedWithColor:(UIColor *)color;
 
 @end
