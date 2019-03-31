@@ -8,7 +8,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>Themes stored in /Library/Zeppelin&#10;GIF Themes stored in /Library/Xeon/GIF</string>
+			<string>Themes stored in /Library/Zeppelin&#10;GIF Themes stored in /Library/Xeon/GIF&#10;Signal Themes stored in /Library/Xeon/SIG</string>
 		</dict>
 		<dict>
 			<key>cellClass</key>
