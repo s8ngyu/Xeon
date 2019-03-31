@@ -1,5 +1,5 @@
 #import "GIFThemes.h"
-#import "XENRootListController.h"
+#import "XENLeftListController.h"
 
 @interface XENGIFAlignedTableViewCell : UITableViewCell {
 }
@@ -151,7 +151,7 @@
     HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"com.peterdev.xeon"];
     [file setObject:selectedTheme forKey:@"GIFTheme"];
 
-    XENRootListController *parent = (XENRootListController *)self.parentController;
+    XENLeftListController *parent = (XENLeftListController *)self.parentController;
     [parent setGIFThemeName:selectedTheme];
 
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)XENNotification, nil, nil, true);

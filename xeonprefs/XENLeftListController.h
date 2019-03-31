@@ -10,12 +10,8 @@
 #import "IconThemes.h"
 #import "XENGIFCommon.h"
 #import "GIFThemes.h"
-#import "XENCreditListController.h"
-#import "XENLeftListController.h"
-#import "XENRightListController.h"
 
-
-@interface XENRootListController : HBRootListController
-- (void)respring:(id)sender;
-- (void)resetPrefs:(id)sender;
+@interface XENLeftListController : HBRootListController
+- (void)setThemeName:(NSString *)name;
+- (void)setGIFThemeName:(NSString *)name;
 @end

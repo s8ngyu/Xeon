@@ -1,6 +1,6 @@
-#include "XENRootListController.h"
+#include "XENRightListController.h"
 
-@implementation XENRootListController
+@implementation XENRightListController
 - (instancetype)init {
     self = [super init];
 
@@ -16,7 +16,7 @@
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
+		_specifiers = [[self loadSpecifiersFromPlistName:@"Right" target:self] retain];
 	}
 
 	return _specifiers;
@@ -30,18 +30,5 @@
 	
     [self.navigationController.navigationController.navigationBar setShadowImage: [UIImage new]];
     self.navigationController.navigationController.navigationBar.translucent = YES;
-}
-
-- (void)respring:(id)sender {
-	pid_t pid;
-    const char* args[] = {"killall", "backboardd", NULL};
-    posix_spawn(&pid, "/usr/bin/killall", NULL, NULL, (char* const*)args, NULL);
-}
-
-- (void)resetPrefs:(id)sender {
-    HBPreferences *prefs = [[HBPreferences alloc] initWithIdentifier:@"com.peterdev.xeon"];
-    [prefs removeAllObjects];
-
-    [self respring:sender];
 }
 @end

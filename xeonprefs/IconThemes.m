@@ -1,5 +1,5 @@
 #import "IconThemes.h"
-#import "XENRootListController.h"
+#import "XENLeftListController.h"
 
 @interface XENAlignedTableViewCell : UITableViewCell {
 }
@@ -151,7 +151,7 @@
     HBPreferences *file = [[HBPreferences alloc] initWithIdentifier:@"com.peterdev.xeon"];
     [file setObject:selectedTheme forKey:@"IconTheme"];
 
-    XENRootListController *parent = (XENRootListController *)self.parentController;
+    XENLeftListController *parent = (XENLeftListController *)self.parentController;
     [parent setThemeName:selectedTheme];
 
     CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), (CFStringRef)XENNotification, nil, nil, true);

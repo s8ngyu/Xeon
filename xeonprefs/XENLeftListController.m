@@ -1,6 +1,6 @@
-#include "XENRootListController.h"
+#include "XENLeftListController.h"
 
-@implementation XENRootListController
+@implementation XENLeftListController
 - (instancetype)init {
     self = [super init];
 
@@ -16,7 +16,7 @@
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
+		_specifiers = [[self loadSpecifiersFromPlistName:@"Left" target:self] retain];
 	}
 
 	return _specifiers;
@@ -32,16 +32,13 @@
     self.navigationController.navigationController.navigationBar.translucent = YES;
 }
 
-- (void)respring:(id)sender {
-	pid_t pid;
-    const char* args[] = {"killall", "backboardd", NULL};
-    posix_spawn(&pid, "/usr/bin/killall", NULL, NULL, (char* const*)args, NULL);
+- (void)setThemeName:(NSString *)name {
+    UITableViewCell *cell = [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:5 inSection:0]];
+	cell.detailTextLabel.text = name;
 }
 
-- (void)resetPrefs:(id)sender {
-    HBPreferences *prefs = [[HBPreferences alloc] initWithIdentifier:@"com.peterdev.xeon"];
-    [prefs removeAllObjects];
-
-    [self respring:sender];
+- (void)setGIFThemeName:(NSString *)name {
+    UITableViewCell *cell = [self.table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:6 inSection:0]];
+	cell.detailTextLabel.text = name;
 }
 @end
