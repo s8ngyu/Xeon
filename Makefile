@@ -9,8 +9,8 @@ TWEAK_NAME = Xeon
 Xeon_FILES = Tweak.xm ./headers/UIImage+ScaledImage.m ./headers/UIImage+animatedGIF.m ./headers/UIImage+tintColor.m ./xeonprefs/XENCommon.m ./xeonprefs/XENGIFCommon.m
 Xeon_LIBRARIES = imagepicker
 Xeon_EXTRA_FRAMEWORKS += Cephei
-
-ADDITIONAL_OBJCFLAGS = -fobjc-arc
+Xeon_LDFLAGS += -lCSColorPicker
+Xeon_OBJCFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 

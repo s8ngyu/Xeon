@@ -9,6 +9,7 @@ XeonPrefs_FRAMEWORKS = UIKit
 XeonPrefs_PRIVATE_FRAMEWORKS = Preferences
 XeonPrefs_LIBRARIES = imagepicker
 XeonPrefs_EXTRA_FRAMEWORKS = Cephei CepheiPrefs
+XeonPrefs_LDFLAGS += -lCSColorPicker
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 
