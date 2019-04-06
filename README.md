@@ -74,7 +74,7 @@ You do not need to resize the images. Xeon automatically resizes the images to f
 ## Path
 Themes stored at /Library/Xeon/SIG
 
-# How to make Xeon cellular bars themes
+# How to make Xeon wifi bars themes
 
 ## Sizing
 You do not need to resize the images. Xeon automatically resizes the images to fit on the status bar. But recommended ratio is (1.70:1)
