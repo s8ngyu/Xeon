@@ -611,18 +611,26 @@ void loadPrefs() {
 }
 
 %ctor {
-	loadPrefs();
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.peterdev.xeon/settingschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+	if (![NSProcessInfo processInfo]) return;
+    NSString *processName = [NSProcessInfo processInfo].processName;
+    bool isSpringboard = [@"SpringBoard" isEqualToString:processName];
 
-	if (isEnabled) {
-		if (!xenPublic) %init(XENAll);
-		if (debug) %init(debug);
-		if (!debug && (isCustomImageEnabled || isCustomTextEnabled)) %init(Xeon);
-		if (!debug && isCustomImageEnabled) %init(XENCustomImage);
-		if (!(themesOrImage == 2) && !(themesOrImage == 3)) {
-			if (!debug && isCustomTextEnabled) %init(XENCustomText);
+	if (isSpringboard) {
+		loadPrefs();
+		CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.peterdev.xeon/settingschanged"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+
+		if (drm) %init(XENDRM);
+
+		if (isEnabled) {
+			if (!xenPublic) %init(XENAll);
+			if (debug) %init(debug);
+			if (!debug && (isCustomImageEnabled || isCustomTextEnabled)) %init(Xeon);
+			if (!debug && isCustomImageEnabled) %init(XENCustomImage);
+			if (!(themesOrImage == 2) && !(themesOrImage == 3)) {
+				if (!debug && isCustomTextEnabled) %init(XENCustomText);
+			}
+			if (!debug && isCustomCarrierEnabled) %init(XENCustomCarrier);
+			if (!debug && isCustomCellularTextEnabled) %init(XENCustomCellularText);
 		}
-		if (!debug && isCustomCarrierEnabled) %init(XENCustomCarrier);
-		if (!debug && isCustomCellularTextEnabled) %init(XENCustomCellularText);
 	}
 }
