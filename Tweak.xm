@@ -611,6 +611,7 @@ void loadPrefs() {
 }
 
 %ctor {
+	//Below codes are from OwO by Nepeta!
 	if (![NSProcessInfo processInfo]) return;
     NSString *processName = [NSProcessInfo processInfo].processName;
     bool isSpringboard = [@"SpringBoard" isEqualToString:processName];
