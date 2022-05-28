@@ -1,3 +1,5 @@
+#include <UIKit/UIKit.h>
+
 #define XENPrefsIdentifier @"com.peterdev.xeon"
 #define XENNotification @"com.peterdev.xeon/settingschanged"
 #define XENThemesDirectory @"/Library/Zeppelin/"

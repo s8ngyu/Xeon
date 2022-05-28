@@ -1,4 +1,4 @@
-#import <UIKit/UIKit.h>
+#include <UIKit/UIKit.h>
 
 /**
         UIImage (animatedGIF)

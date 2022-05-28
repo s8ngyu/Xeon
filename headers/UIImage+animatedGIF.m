@@ -104,7 +104,6 @@ static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRe
         CFRelease(source);
         return image;
     } else {
-        HBLogDebug(@"We got a bad url");
         return nil;
     }
 }

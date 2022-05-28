@@ -1,3 +1,5 @@
+#import "UIImage+ScaledImage.h"
+
 @implementation UIImage (ScaledImage)
 
 - (UIImage *)scaleImageToSize:(CGSize)newSize {

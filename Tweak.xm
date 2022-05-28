@@ -3,7 +3,6 @@
 #import <UIKit/UIControl.h>
 #import <Cephei/HBPreferences.h>
 #import <libimagepicker.h>
-#import <LIPImageChooseCell.h>
 #import "./headers/UIImage+ScaledImage.h"
 #import "./headers/UIImage+animatedGIF.h"
 #import "./xeonprefs/XENCommon.h"
