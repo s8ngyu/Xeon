@@ -1,11 +1,11 @@
 Package: com.peterdev.xeon
-Name: Xeon
+Name: Xeon Lite
 Depends: mobilesubstrate, ws.hbang.common (>= 1.11), firmware (>= 11.0), cy+cpu.arm64, com.rpetrich.rocketbootstrap (>= 1.0.7~beta1), com.muirey03.libimagepicker
-Version: 1.1.1
+Version: 1.1.2
 Architecture: iphoneos-arm
 Description: Supercharge status bar!
 Provides: com.alexzielenski.zeppelin
-Maintainer: PeterDev <djperter@icloud.com>
-Author: PeterDev <djperter@icloud.com>
+Maintainer: PeterDev <support@soongyu.me>
+Author: Soongyu Kwon <support@soongyu.me>
 Icon: https://nexusrepo.kro.kr/depictions/com.peterdev.xeon/screenshots/Icon.png
 Section: Tweaks
