@@ -1,4 +1,5 @@
 /.theos
+/.vscode
 obj
 .DS_Store
 /packages
